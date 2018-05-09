@@ -69,7 +69,7 @@ def process(inpath, outpath):
 				if keyElement in s2:
 					sk2[index]=sk2[index]+1 
 			r=cos_dist(sk1,sk2) 
-			if r > 0.8:
+			if r > 0.7:
 				fout.write(lineno + '\t1\n')
 			else:
 				fout.write(lineno + '\t0\n')
