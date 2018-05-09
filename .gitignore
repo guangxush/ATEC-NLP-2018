@@ -1,6 +1,8 @@
 *.pyc
 .idea/
 raw_data
+models
+!models/README.md
 .DS_Store
 *.ipynb
 .ipynb_checkpoints/
