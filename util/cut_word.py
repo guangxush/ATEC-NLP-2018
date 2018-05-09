@@ -7,9 +7,9 @@ import math
 import jieba
 reload(sys)
 sys.setdefaultencoding("utf-8")
-out = open('cut_word.txt','w')
+out = open('../data/cut_word.csv', 'w')
 
-csv_file = csv.reader(open('atec_nlp_sim_train.csv','r'))
+csv_file = csv.reader(open('../raw_data/atec_nlp_sim_train.csv', 'r'))
 for item in csv_file:
 	for word in item:
 		s = str(word)
