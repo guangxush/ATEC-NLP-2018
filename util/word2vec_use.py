@@ -10,12 +10,21 @@ def word2vec(input_file):
     #加载已经训练好的model
     model = gensim.models.Word2Vec.load('../models/word2vec_wx')
     #print(model[u'花'])
-    input_data = pd.read_csv(input_file)  # 读取已经切好词的句子
-    out_file = open('../data/cut_wordvec.csv', 'w', 'utf-8')
+    input_data = pd.read_csv(input_file) 
+	# 读取已经切好词的句子
+    out_file = open('../data/cut_wordvec.csv','w')
+	#out_file = open('../data/cut_wordvec.csv', 'w', 'utf-8')
     for idx in input_data.index:
         out_line = []
         for word in (input_data.loc[idx][0].split('/')):
-            out_line.append(model[word])  # 将每一个单词转换成向量model[单词]
+			print (word)
+			try:
+				c = model[word.decode('utf-8')]
+			except KeyError:
+				print ('not in vocabulary')
+				c = 0
+			out_line.append(c) # 将每一个单词转换成向量model[单词]
+			print(out_line)
         out_file.write("/".join(out_line) + '\n')  # 将向量重新保存到文件中
     return
 
