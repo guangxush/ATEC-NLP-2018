@@ -3,7 +3,6 @@
 ##jieba
 import sys
 import csv
-import math
 import jieba
 
 reload(sys)
