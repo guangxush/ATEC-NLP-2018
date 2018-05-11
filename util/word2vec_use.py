@@ -14,8 +14,8 @@ def word2vec(input_file):
 	# 读取已经切好词的句子
     out_file = open('../data/cut_wordvec.csv','w')
 	#out_file = open('../data/cut_wordvec.csv', 'w', 'utf-8')
-    for idx in input_data.index:
-        out_line = []
+	for idx in input_data.index:
+		out_line = []
         for word in (input_data.loc[idx][0].split('/')):
 			print (word)
 			try:
@@ -24,8 +24,9 @@ def word2vec(input_file):
 				print ('not in vocabulary')
 				c = 0
 			out_line.append(c) # 将每一个单词转换成向量model[单词]
-			print(out_line)
-        out_file.write("/".join(out_line) + '\n')  # 将向量重新保存到文件中
+        for i in range(len(out_line)):
+			sum += out_line
+			 out_file.write(sum/len(out_line))  # 将向量重新保存到文件中
     return
 
 
