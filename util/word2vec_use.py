@@ -53,7 +53,7 @@ def word2vec_all(model, input_data, output_file):
                     print ('not in vocabulary')
                     c = 0
                 cur_out_line.append(str(c))  # 将当前行每一个单词转换成向量model[单词]
-            print(idx)
+            print(idx+1)
             for word in next_line:
                 # print(word)
                 try:
