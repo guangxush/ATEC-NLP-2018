@@ -5,7 +5,6 @@ import pandas as pd
 import warnings
 
 from numpy.core.multiarray import ndarray
-from typing import List, Any, Union
 
 warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 
