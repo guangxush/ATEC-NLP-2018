@@ -23,8 +23,8 @@ def word2vec(input_file):
                 print ('not in vocabulary')
                 c = 0
             out_line.append(c)  # 将每一个单词转换成向量model[单词]
-        for i in range(len(out_line)):
-            sum += out_line[i]
+        for i in out_line:
+            sum += i
         out_file.write(str(sum/len(out_line)))  # 将向量重新保存到文件中
     return
 
