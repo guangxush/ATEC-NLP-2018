@@ -19,6 +19,7 @@ def word2vec_avg(model, input_data, output_file):
     for line in raw_data_file:
         sen = line.split('\t')
         if len(sen) > 2:
+            print(sen[2])
             raw_data.append(sen[2])
         else:
             raw_data.append('0')
@@ -40,7 +41,7 @@ def word2vec_avg(model, input_data, output_file):
             out_file.write(str(sum/len(out_line)) + '\t'+str(raw_data[idx / 2]) + '\n')  # 将向量重新保存到文件中
         else:
             out_file.write(str(sum / len(out_line)) + '\t')  # 将向量重新保存到文件中
-        print('******end word to avg_vec******')
+    print('******end word to avg_vec******')
     return
 
 
