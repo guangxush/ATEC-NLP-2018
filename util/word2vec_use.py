@@ -15,7 +15,7 @@ def word2vec(input_file):
     out_file = open("../data/cut_wordvec.csv", 'w')
     for idx in input_data.index:
         out_line = []
-        for word in (input_data.loc[idx][0].split('/')):
+        for word in (input_data.loc[idx].split('/')):
             print (word)
             try:
                 c = model[word.decode('utf-8')]
