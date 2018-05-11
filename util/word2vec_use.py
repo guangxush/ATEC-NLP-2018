@@ -19,8 +19,9 @@ def word2vec(input_file):
     for idx in input_data.index:  # 逐行遍历
         out_line = []
         print(idx)
-        '''for word in (input_data.loc[idx][0].split('/')):
-            try:
+        for word in (input_data.loc[idx][0].split('/')):
+            print(word)
+            '''try:
                 c = model[word.decode('utf-8')]
             except KeyError:
                 print ('not in vocabulary')
