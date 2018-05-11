@@ -15,8 +15,7 @@ def word2vec(input_file):
     out_file = open("../data/cut_wordvec.csv", 'w')
     for idx in input_data.index:
         out_line = []
-        for word in (input_data.loc[idx].split('/')):
-            print (word)
+        for word in (input_data.loc[idx][0].split('/')):
             try:
                 c = model[word.decode('utf-8')]
             except KeyError:
@@ -26,7 +25,8 @@ def word2vec(input_file):
         sum = 0
         for i in out_line:
             sum += i
-        out_file.write(str(sum/len(out_line)))  # 将向量重新保存到文件中
+        print(sum/len(out_line))
+        out_file.write(str(sum/len(out_line))+'\n')  # 将向量重新保存到文件中
     return
 
 
