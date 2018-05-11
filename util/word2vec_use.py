@@ -19,8 +19,8 @@ def word2vec_avg(model, input_data, output_file):
     for line in raw_data_file:
         sen = line.split('\t')
         if len(sen) > 2:
-            print(sen[2])
-            raw_data.append(sen[2])
+            print(sen[2].strip("\r\n", ""))
+            raw_data.append(sen[2].strip("\r\n", ""))
         else:
             raw_data.append('0')
     for idx in input_data.index:  # 逐行遍历
