@@ -17,7 +17,11 @@ def word2vec_avg(model, input_data, output_file):
     raw_data_file = open('../raw_data/atec_nlp_sim_train.csv', 'r')
     raw_data = []
     for line in raw_data_file:
-        raw_data.append(line.split('\t')[2])
+        sen = line.split('\t')
+        if len(sen) > 2:
+            raw_data.append(sen[2])
+        else:
+            raw_data.append('0')
     for idx in input_data.index:  # 逐行遍历
         out_line = []
         print(idx)
