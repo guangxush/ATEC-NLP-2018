@@ -3,6 +3,7 @@ import sys
 import gensim
 import pandas as pd
 import warnings
+import csv
 
 from numpy.core.multiarray import ndarray
 
@@ -13,6 +14,10 @@ warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 def word2vec_avg(model, input_data, output_file):
     print('******start word to avg_vec******')
     out_file = open(output_file, 'w')
+    raw_data_file = open('../raw_data/atec_nlp_sim_train.csv', 'r')
+    raw_data = []
+    for line in raw_data_file:
+        raw_data.append(line.split('\t')[2])
     for idx in input_data.index:  # 逐行遍历
         out_line = []
         print(idx)
@@ -27,7 +32,10 @@ def word2vec_avg(model, input_data, output_file):
         sum = 0
         for i in out_line:
             sum += i
-        out_file.write(str(sum/len(out_line))+'\n')  # 将向量重新保存到文件中
+        if idx % 2 == 0:
+            out_file.write(str(sum/len(out_line)) + '\t'+str(raw_data[idx / 2]) + '\n')  # 将向量重新保存到文件中
+        else:
+            out_file.write(str(sum / len(out_line)) + '\t')  # 将向量重新保存到文件中
         print('******end word to avg_vec******')
     return
 
