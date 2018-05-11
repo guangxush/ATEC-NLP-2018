@@ -3,6 +3,10 @@
 import gensim
 import pandas as pd
 import warnings
+
+from numpy.core.multiarray import ndarray
+from typing import List, Any, Union
+
 warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 
 
@@ -13,9 +17,10 @@ def word2vec(input_file):
     input_data = pd.read_csv(input_file) 
     # 读取已经切好词的句子
     out_file = open("../data/cut_wordvec.csv", 'w')
-    for idx in input_data.index:
+    for idx in input_data.index:  # 逐行遍历
         out_line = []
-        for word in (input_data.loc[idx][0].split('/')):
+        print(idx)
+        '''for word in (input_data.loc[idx][0].split('/')):
             try:
                 c = model[word.decode('utf-8')]
             except KeyError:
@@ -26,7 +31,7 @@ def word2vec(input_file):
         for i in out_line:
             sum += i
         print(sum/len(out_line))
-        out_file.write(str(sum/len(out_line))+'\n')  # 将向量重新保存到文件中
+        out_file.write(str(sum/len(out_line))+'\n')  # 将向量重新保存到文件中'''
     return
 
 
