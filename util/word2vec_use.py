@@ -20,14 +20,15 @@ def word2vec(input_file):
         out_line = []
         print(idx)
         for word in (input_data.loc[idx][0].split('/')):
-            print(word)
-            '''try:
+            #print(word)
+            try:
                 c = model[word.decode('utf-8')]
             except KeyError:
                 print ('not in vocabulary')
                 c = 0
             out_line.append(c)  # 将每一个单词转换成向量model[单词]
-        sum = 0
+        print(out_line)
+        '''sum = 0
         for i in out_line:
             sum += i
         print(sum/len(out_line))
