@@ -27,18 +27,21 @@ def word2vec_avg(model, input_data, output_file):
         out_line = []
         print(idx)
         for word in (input_data.loc[idx][0].split('/')):
-            #print(word)
+            print(word)
             try:
                 c = model[word.decode('utf-8')]
+                print(c)
+                print(c.dtype)
             except KeyError:
                 print ('not in vocabulary')
-                c = 0
+                c = [0]
             out_line.append(c)  # 将每一个单词转换成向量model[单词]
-        sum = 0
+        sum = [0]
         for i in out_line:
             sum += i
+        print(sum)
         if idx % 2 == 0:
-            out_file.write(str(sum/len(out_line)) + '\t'+str(raw_data[idx / 2]) + '\n')  # 将向量重新保存到文件中
+            out_file.write(str(sum / len(out_line)) + '\t'+str(raw_data[idx / 2]) + '\n')  # 将向量重新保存到文件中
         else:
             out_file.write(str(sum / len(out_line)) + '\t')  # 将向量重新保存到文件中
     print('******end word to avg_vec******')
