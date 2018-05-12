@@ -3,7 +3,7 @@ import sys
 import gensim
 import pandas as pd
 import warnings
-import csv
+import numpy as np
 
 from numpy.core.multiarray import ndarray
 
@@ -19,31 +19,28 @@ def word2vec_avg(model, input_data, output_file):
     for line in raw_data_file:
         sen = line.split('\t')
         if len(sen) > 2:
-            print(sen[2].strip())
+            #print(sen[2].strip())
             raw_data.append(sen[2].strip())
         else:
             raw_data.append('0')
+    print('******read flag from raw_data finished******')
     for idx in input_data.index:  # 逐行遍历
-        out_line = []
+        res_vec = np.zeros(256, dtype=np.float32)
         print(idx)
+        count = 0
         for word in (input_data.loc[idx][0].split('/')):
-            print(word)
             try:
                 c = model[word.decode('utf-8')]
-                print(c)
-                print(c.dtype)
             except KeyError:
                 print ('not in vocabulary')
-                c = [0]
-            out_line.append(c)  # 将每一个单词转换成向量model[单词]
-        sum = [0]
-        for i in out_line:
-            sum += i
-        print(sum)
-        if idx % 2 == 0:
-            out_file.write(str(sum / len(out_line)) + '\t'+str(raw_data[idx / 2]) + '\n')  # 将向量重新保存到文件中
+                c = np.zeros(256, dtype=np.float32)
+            res_vec = res_vec + c  # 将每一个单词转换成向量model[单词]
+            count += 1  # 计算相加元素的个数
+            res_vec_list = (res_vec / count).tolist()
+        if idx % 2 != 0:  # 注意idx从0开始遍历
+            out_file.write((','.join(str(i) for i in res_vec_list[:])) + ',' + str(raw_data[idx/2]) + '\n')  # 将sen2向量重新保存到文件中
         else:
-            out_file.write(str(sum / len(out_line)) + '\t')  # 将向量重新保存到文件中
+            out_file.write((','.join(str(i) for i in res_vec_list[:])) + ',')  # 将sen1向量重新保存到文件中
     print('******end word to avg_vec******')
     return
 
