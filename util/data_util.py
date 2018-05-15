@@ -1,27 +1,27 @@
 # -*- coding: utf-8 -*-
 import sys
 reload(sys)
-sys.setdeafultencoding('utf-8')
+sys.setdefaultencoding('utf-8') #gb2312
 import random
 import numpy as np
-from tflearn.data.util import pad_sequences
-# from pypinyin import pinyin,lazy_pinyin
+from tflearn.data_utils import pad_sequences
+#from pypinyin import pinyin,lazy_pinyin
+
 from collections import Counter
 import os
 import pickle
 import csv
 import jieba
 from data_mining.data_util_tfidf import cos_distance_bag_tfidf,get_tfidf_score_and_save
-
 jieba.add_word('花呗')
 jieba.add_word('借呗')
 PAD_ID = 0
-UNK_ID = 1
-_PAD = "_PAD"
-_UNK = "UNK"
-TRUE_LABEL = '1'
-splitter = "&|&"
-special_start_token = [u'怎么', u'如何', u'为什么', u'为何']
+UNK_ID=1
+_PAD="_PAD"
+_UNK="UNK"
+TRUE_LABEL='1'
+splitter="&|&"
+special_start_token=[u'怎么',u'如何',u'为什么',u'为何']
 
 
 #  将原始数据word转换成index
