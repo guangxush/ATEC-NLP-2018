@@ -23,25 +23,26 @@ keep_prob = tf.placeholder(tf.float32)     # 概率
 
 h1 = add_layer(x,784,300,keep_prob,tf.nn.relu)
 h2 = add_layer(h1,300,400,keep_prob,tf.nn.relu)
+h3 = add_layer(h2,400,500,keep_prob,tf.nn.relu)
+h4 = add_layer(h2,500,600,keep_prob,tf.nn.relu)
 ##输出层
-w = tf.Variable(tf.zeros([400,10]))     #300*10
+w = tf.Variable(tf.zeros([600,10]))     #300*10
 b = tf.Variable(tf.zeros([10]))
 y = tf.nn.softmax(tf.matmul(h2,w)+b)
 
 #定义loss,optimizer
-cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y),reduction_indices=[1]))
-train_step  =tf.train.AdagradOptimizer(0.35).minimize(cross_entropy)
+cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
+train_step = tf.train.AdagradOptimizer(0.35).minimize(cross_entropy)
 
 correct_prediction = tf.equal(tf.argmax(y,1),tf.argmax(y_,1))       #高维度的
 acuracy = tf.reduce_mean(tf.cast(correct_prediction,tf.float32))    #要用reduce_mean
 
 tf.global_variables_initializer().run()
-for i in range(3000):
+for i in range(10000):
     batch_x,batch_y  = mnist.train.next_batch(100)
     train_step.run({x:batch_x,y_:batch_y,keep_prob:0.75})
     if i%1000==0:
         train_accuracy = acuracy.eval({x:batch_x,y_:batch_y,keep_prob:1.0})
         print("step %d,train_accuracy %g"%(i,train_accuracy))
-
 
 print acuracy.eval({x:mnist.test.images,y_:mnist.test.labels,keep_prob:1.0})
