@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import numpy as np
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets("MNIST_data/",one_hot=True)
@@ -38,11 +39,16 @@ correct_prediction = tf.equal(tf.argmax(y,1),tf.argmax(y_,1))       #高维度�
 acuracy = tf.reduce_mean(tf.cast(correct_prediction,tf.float32))    #要用reduce_mean
 
 tf.global_variables_initializer().run()
+#cost_accum = []
 for i in range(10000):
     batch_x,batch_y  = mnist.train.next_batch(100)
     train_step.run({x:batch_x,y_:batch_y,keep_prob:0.75})
     if i%1000==0:
         train_accuracy = acuracy.eval({x:batch_x,y_:batch_y,keep_prob:1.0})
         print("step %d,train_accuracy %g"%(i,train_accuracy))
+        #cost_accum.append(train_accuracy)
+        if np.abs(acc_prev - train_accuracy) < 1e-6:
+            break
+        acc_prev = train_accuracy
 
 print acuracy.eval({x:mnist.test.images,y_:mnist.test.labels,keep_prob:1.0})
