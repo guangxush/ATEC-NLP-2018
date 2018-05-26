@@ -23,12 +23,12 @@ keep_prob = tf.placeholder(tf.float32)     # 概率
 
 h1 = add_layer(x,784,300,keep_prob,tf.nn.relu)
 h2 = add_layer(h1,300,400,keep_prob,tf.nn.relu)
-h3 = add_layer(h2,400,500,keep_prob,tf.nn.relu)
-h4 = add_layer(h3,500,600,keep_prob,tf.nn.relu)
+#h3 = add_layer(h2,400,500,keep_prob,tf.nn.relu)
+#h4 = add_layer(h3,500,600,keep_prob,tf.nn.relu)
 ##输出层
-w = tf.Variable(tf.zeros([600,10]))     #300*10
+w = tf.Variable(tf.zeros([400,10]))     #300*10
 b = tf.Variable(tf.zeros([10]))
-y = tf.nn.softmax(tf.matmul(h4,w)+b)
+y = tf.nn.softmax(tf.matmul(h2,w)+b)
 
 #定义loss,optimizer
 cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
