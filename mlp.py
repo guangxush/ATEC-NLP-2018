@@ -40,6 +40,7 @@ acuracy = tf.reduce_mean(tf.cast(correct_prediction,tf.float32))    #要用reduc
 
 tf.global_variables_initializer().run()
 #cost_accum = []
+acc_prev = 0
 for i in range(10000):
     batch_x,batch_y  = mnist.train.next_batch(100)
     train_step.run({x:batch_x,y_:batch_y,keep_prob:0.75})
