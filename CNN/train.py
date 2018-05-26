@@ -49,7 +49,7 @@ print("")
 
 # Load data
 print("Loading data...")
-s1 ,s2, score = data_helper.read_data_sets(FLAGS.data_file)
+s1, s2, score = data_helper.read_data_sets(FLAGS.data_file)
 score = np.asarray([[s] for s in score])
 sample_num = len(score)
 train_end = int(sample_num * FLAGS.train_sample_percentage)

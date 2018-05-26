@@ -6,7 +6,7 @@ import re
 from multiprocessing import Pool
 
 class dataset(object):
-    def __init__(self,s1,s2,label):
+    def __init__(self,s1,s2,label):  # 模型初始化
         self.index_in_epoch = 0
         self.s1 = s1
         self.s2 = s2
