@@ -22,7 +22,7 @@ def add_layer(inputs, in_size, out_size, keep_prob=1.0, activation_function=None
 
 # holder变量
 x = tf.placeholder(tf.float32, [None, 33])
-y_ = tf.placeholder(tf.float32, [None, 3])
+y_ = tf.placeholder(tf.float32, [None, 1])
 keep_prob = tf.placeholder(tf.float32)     # 概率
 
 h1 = add_layer(x, 33, 512, keep_prob, tf.nn.relu)
