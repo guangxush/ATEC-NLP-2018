@@ -6,6 +6,7 @@ mnist = input_data.read_data_sets("MNIST_data/",one_hot=True)
 sess = tf.InteractiveSession()
 
 
+
 #定义添加隐含层的函数
 def add_layer(inputs, in_size, out_size, keep_prob=1.0, activation_function=None):
     Weights = tf.Variable(tf.truncated_normal([in_size, out_size], stddev=0.1))
@@ -44,15 +45,33 @@ acuracy = tf.reduce_mean(tf.cast(correct_prediction,tf.float32))    # 要用redu
 tf.global_variables_initializer().run()
 #cost_accum = []
 acc_prev = 0
+
+# 读取输入数据
+input_file = open('./data/output.txt', 'r')
+input_x = []
+input_y = []
+for line in input_file:
+    record = line.split('\t')
+    input_x.append(np.array(record[0][1:-1].split(',')))
+    input_y.append(np.array(record[-1].split(',')))
+
+input_X = np.array(input_x, dtype=np.float32)
+input_Y = np.array(input_y, dtype=np.float32)
+print input_X.shape
+print input_Y.shape
+print input_X.dtype
+print input_Y.dtype
+
+
 for i in range(10000):
-    batch_x, batch_y = mnist.train.next_batch(100)
-    train_step.run({x:batch_x, y_:batch_y, keep_prob:0.75})
+    train_step.run({x:input_X, y_:input_Y, keep_prob:0.75})
     if i%1000 == 0:
-        train_accuracy = acuracy.eval({x:batch_x,y_:batch_y,keep_prob:1.0})
+        train_accuracy = acuracy.eval({x:input_X,y_:input_Y,keep_prob:1.0})
         print("step %d,train_accuracy %g"%(i,train_accuracy))
         #cost_accum.append(train_accuracy)
         if np.abs(acc_prev - train_accuracy) < 1e-6:
             break
         acc_prev = train_accuracy
 
-print acuracy.eval({x:mnist.test.images, y_:mnist.test.labels, keep_prob:1.0})
+
+print acuracy.eval({x:input_X, y_:input_Y, keep_prob:1.0})
