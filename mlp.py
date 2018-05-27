@@ -57,19 +57,19 @@ print input_Y.shape
 print input_X.dtype
 print input_Y.dtype
 
+sess = tf.Session()
 saver = tf.train.Saver()
-with tf.Session() as sess:
-    sess.run(tf.global_variables_initializer())
-    for i in range(1000):
-        train_step.run({x:input_X, y_:input_Y, keep_prob:0.75})
-        if i%10 == 0:
-            train_accuracy = acuracy.eval({x:input_X,y_:input_Y,keep_prob:1.0})
-            print("step %d,train_accuracy %g"%(i,train_accuracy))
-            #cost_accum.append(train_accuracy)
-            if np.abs(acc_prev - train_accuracy) < 1e-6:
-                break
-            acc_prev = train_accuracy
-            saver.save(sess, "models/mlp-model.ckpt")
+sess.run(tf.global_variables_initializer())
+for i in range(1000):
+    train_step.run({x:input_X, y_:input_Y, keep_prob:0.75})
+    if i%10 == 0:
+        train_accuracy = acuracy.eval({x:input_X,y_:input_Y,keep_prob:1.0})
+        print("step %d,train_accuracy %g"%(i,train_accuracy))
+        #cost_accum.append(train_accuracy)
+        if np.abs(acc_prev - train_accuracy) < 1e-6:
+            break
+        acc_prev = train_accuracy
+        saver.save(sess, "models/mlp-model.ckpt")
 
 
 print acuracy.eval({x:input_X, y_:input_Y, keep_prob:1.0})
