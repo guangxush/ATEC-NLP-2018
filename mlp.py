@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import tensorflow as tf
+sess = tf.InteractiveSession()
+
+
 
 #定义添加隐含层的函数
 def add_layer(inputs, in_size, out_size, keep_prob=1.0, activation_function=None):
@@ -37,6 +40,7 @@ train_step = tf.train.AdagradOptimizer(0.35).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))       # 高维度的
 acuracy = tf.reduce_mean(tf.cast(correct_prediction,tf.float32))    # 要用reduce_mean
 
+tf.global_variables_initializer().run()
 #cost_accum = []
 acc_prev = 0
 
@@ -56,9 +60,7 @@ print input_Y.shape
 print input_X.dtype
 print input_Y.dtype
 
-sess = tf.Session()
-saver = tf.train.Saver()
-sess.run(tf.global_variables_initializer())
+
 for i in range(1000):
     train_step.run({x:input_X, y_:input_Y, keep_prob:0.75})
     if i%10 == 0:
@@ -68,7 +70,6 @@ for i in range(1000):
         if np.abs(acc_prev - train_accuracy) < 1e-6:
             break
         acc_prev = train_accuracy
-        saver.save(sess, "models/mlp-model.ckpt")
 
 
 print acuracy.eval({x:input_X, y_:input_Y, keep_prob:1.0})
