@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import tensorflow as tf
-saver = tf.train.Saver(max_to_keep=4)
-
 
 #定义添加隐含层的函数
 def add_layer(inputs, in_size, out_size, keep_prob=1.0, activation_function=None):
@@ -59,6 +57,7 @@ print input_Y.shape
 print input_X.dtype
 print input_Y.dtype
 
+saver = tf.train.Saver()
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     for i in range(1000):
@@ -70,7 +69,7 @@ with tf.Session() as sess:
             if np.abs(acc_prev - train_accuracy) < 1e-6:
                 break
             acc_prev = train_accuracy
-            saver.save(sess, "models/mlp-model", global_step=i)
+            saver.save(sess, "models/mlp-model.ckpt")
 
 
 print acuracy.eval({x:input_X, y_:input_Y, keep_prob:1.0})
