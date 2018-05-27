@@ -21,18 +21,18 @@ def add_layer(inputs, in_size, out_size, keep_prob=1.0, activation_function=None
 
 
 # holder变量
-x = tf.placeholder(tf.float32, [None, 784])
-y_ = tf.placeholder(tf.float32, [None, 10])
+x = tf.placeholder(tf.float32, [None, 33])
+y_ = tf.placeholder(tf.float32, [None, 3])
 keep_prob = tf.placeholder(tf.float32)     # 概率
 
-h1 = add_layer(x, 784, 512, keep_prob, tf.nn.relu)
+h1 = add_layer(x, 33, 512, keep_prob, tf.nn.relu)
 h2 = add_layer(h1, 512, 128, keep_prob, tf.nn.relu)
 h3 = add_layer(h2, 128, 64, keep_prob, tf.nn.relu)
 h4 = add_layer(h3, 64, 32, keep_prob, tf.nn.relu)
 
 # 输出层
-w = tf.Variable(tf.zeros([32, 10]))
-b = tf.Variable(tf.zeros([10]))
+w = tf.Variable(tf.zeros([32, 1]))
+b = tf.Variable(tf.zeros([1]))
 y = tf.nn.softmax(tf.matmul(h4, w)+b)
 
 # 定义loss,optimizer
