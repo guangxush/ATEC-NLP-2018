@@ -24,7 +24,7 @@ x = tf.placeholder(tf.float32, [None, 784])
 y_ = tf.placeholder(tf.float32, [None, 10])
 keep_prob = tf.placeholder(tf.float32)     # 概率
 
-h1 = add_layer(x, 33, 512, keep_prob, tf.nn.relu)
+h1 = add_layer(x, 784, 512, keep_prob, tf.nn.relu)
 h2 = add_layer(h1, 512, 128, keep_prob, tf.nn.relu)
 h3 = add_layer(h2, 128, 64, keep_prob, tf.nn.relu)
 h4 = add_layer(h3, 64, 32, keep_prob, tf.nn.relu)
