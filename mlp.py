@@ -38,11 +38,6 @@ train_step = tf.train.AdagradOptimizer(0.35).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))       # 高维度的
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))    # 要用reduce_mean
 
-init = tf.global_variables_initializer()
-sess = tf.Session()
-sess.run(init)
-m_saver = tf.train.Saver()
-
 #cost_accum = []
 acc_prev = 0
 # 读取输入数据
@@ -61,16 +56,23 @@ print input_Y.shape
 print input_X.dtype
 print input_Y.dtype
 
+init = tf.global_variables_initializer()
+sess = tf.Session()
+sess.run(init)
+m_saver = tf.train.Saver()
+
 
 for i in range(1000):
     sess.run(train_step, feed_dict={x:input_X, y_:input_Y, keep_prob:0.75})
     if i%10 == 0:
-        train_accuracy = accuracy.eval({x:input_X,y_:input_Y,keep_prob:1.0})
+        train_accuracy = sess.run(accuracy, feed_dict={x:input_X,y_:input_Y,keep_prob:1.0})
         print("step %d,train_accuracy %g"%(i,train_accuracy))
         #cost_accum.append(train_accuracy)
-        if np.abs(acc_prev - train_accuracy) < 1e-6:
+        '''if np.abs(acc_prev - train_accuracy) < 1e-6:
             break
-        acc_prev = train_accuracy
+        acc_prev = train_accuracy'''
+        m_saver.save(sess, './model/mlp_model', global_step=i)
 
 
-print accuracy.eval({x:input_X, y_:input_Y, keep_prob:1.0})
+print sess.eval(accuracy, feed_dict={x:input_X, y_:input_Y, keep_prob:1.0})
+sess.close()
