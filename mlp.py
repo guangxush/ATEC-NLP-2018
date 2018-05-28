@@ -46,8 +46,8 @@ input_x = []
 input_y = []
 for line in input_file:
     record = line.split('\t')
-    input_x.append(np.array(record[0][1:-1].split(',')))
-    input_y.append(np.array(record[-1].split(',')))
+    input_x.append(np.array(record[0][1:-2].split(',')))
+    input_y.append(np.array(record[-2:].split(',')))
 
 input_X = np.array(input_x, dtype=np.float32)
 input_Y = np.array(input_y, dtype=np.float32)
