@@ -72,7 +72,7 @@ for i in range(1000):
         '''if np.abs(acc_prev - train_accuracy) < 1e-6:
             break
         acc_prev = train_accuracy'''
-        m_saver.save(sess, './model/mlp_model', global_step=i)
+        m_saver.save(sess, './models/mlp_model', global_step=i)
 
 
 print sess.eval(accuracy, feed_dict={x:input_X, y_:input_Y, keep_prob:1.0})
