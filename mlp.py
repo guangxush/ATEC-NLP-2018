@@ -41,13 +41,13 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))    # 要用re
 # cost_accum = []
 acc_prev = 0
 # 读取输入数据
-input_file = open('./data/output.csv', 'r')
+input_file = open('./data/train_data.csv', 'r')
 input_x = []
 input_y = []
 for line in input_file:
     record = line.split('\t')
-    input_x.append(np.array(record[0][1:-2].split(',')))
-    input_y.append(np.array(record[-2:].split(',')))
+    input_x.append(np.array(record[0][1:-1].split(',')))
+    input_y.append(np.array(record[-1][1:-1].split(',')))
 
 input_X = np.array(input_x, dtype=np.float32)
 input_Y = np.array(input_y, dtype=np.float32)
