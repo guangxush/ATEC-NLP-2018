@@ -66,8 +66,8 @@ for i in range(1000):
     sess.run(train_step, feed_dict={x:input_X, y_:input_Y, keep_prob:0.75})
     if i%100 == 0:
         train_accuracy = sess.run(accuracy, feed_dict={x:input_X,y_:input_Y,keep_prob:1.0})
-        train_loss = sess.run(correct_prediction, feed_dict={x:input_X, y_:input_Y, keep_prob:0.75})
-        print("step %d,train_accuracy %g,train_loss%g" % (i, train_accuracy,train_loss))
+        #train_loss = sess.run(correct_prediction, feed_dict={x:input_X, y_:input_Y, keep_prob:0.75})
+        print("step %d,train_accuracy %g" % (i, train_accuracy))
         #cost_accum.append(train_accuracy)
         '''if np.abs(acc_prev - train_accuracy) < 1e-6:
             break
