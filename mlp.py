@@ -18,7 +18,7 @@ def add_layer(inputs, in_size, out_size, keep_prob=1.0, activation_function=None
 
 # holder变量
 x = tf.placeholder(tf.float32, [None, 33])
-y_ = tf.placeholder(tf.float32, [None, 1])
+y_ = tf.placeholder(tf.float32, [None, 2])
 keep_prob = tf.placeholder(tf.float32)     # 概率
 
 h1 = add_layer(x, 33, 512, keep_prob, tf.nn.relu)
@@ -27,8 +27,8 @@ h3 = add_layer(h2, 128, 64, keep_prob, tf.nn.relu)
 h4 = add_layer(h3, 64, 32, keep_prob, tf.nn.relu)
 
 # 输出层
-w = tf.Variable(tf.zeros([32, 1]))
-b = tf.Variable(tf.zeros([1]))
+w = tf.Variable(tf.zeros([32, 2]))
+b = tf.Variable(tf.zeros([2]))
 y = tf.nn.softmax(tf.matmul(h4, w)+b)
 
 # 定义loss,optimizer
@@ -38,10 +38,10 @@ train_step = tf.train.AdagradOptimizer(0.001).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))       # 高维度的
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))    # 要用reduce_mean
 
-#cost_accum = []
+# cost_accum = []
 acc_prev = 0
 # 读取输入数据
-input_file = open('./data/output.txt', 'r')
+input_file = open('./data/output.csv', 'r')
 input_x = []
 input_y = []
 for line in input_file:
