@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import tensorflow as tf
-sess = tf.InteractiveSession()
-
 
 
 #定义添加隐含层的函数
@@ -38,12 +36,15 @@ cross_entropy = -tf.reduce_mean(y_ * tf.log(tf.clip_by_value(y, 1e-10, 1.0)))
 train_step = tf.train.AdagradOptimizer(0.35).minimize(cross_entropy)
 
 correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))       # 高维度的
-acuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))    # 要用reduce_mean
+accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))    # 要用reduce_mean
 
-tf.global_variables_initializer().run()
+init = tf.global_variables_initializer()
+sess = tf.Session()
+sess.run(init)
+m_saver = tf.train.Saver()
+
 #cost_accum = []
 acc_prev = 0
-
 # 读取输入数据
 input_file = open('./data/output.txt', 'r')
 input_x = []
@@ -62,9 +63,9 @@ print input_Y.dtype
 
 
 for i in range(1000):
-    train_step.run({x:input_X, y_:input_Y, keep_prob:0.75})
+    sess.run(train_step, feed_dict={x:input_X, y_:input_Y, keep_prob:0.75})
     if i%10 == 0:
-        train_accuracy = acuracy.eval({x:input_X,y_:input_Y,keep_prob:1.0})
+        train_accuracy = accuracy.eval({x:input_X,y_:input_Y,keep_prob:1.0})
         print("step %d,train_accuracy %g"%(i,train_accuracy))
         #cost_accum.append(train_accuracy)
         if np.abs(acc_prev - train_accuracy) < 1e-6:
@@ -72,4 +73,4 @@ for i in range(1000):
         acc_prev = train_accuracy
 
 
-print acuracy.eval({x:input_X, y_:input_Y, keep_prob:1.0})
+print accuracy.eval({x:input_X, y_:input_Y, keep_prob:1.0})
