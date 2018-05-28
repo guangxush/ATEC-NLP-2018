@@ -33,7 +33,7 @@ y = tf.nn.softmax(tf.matmul(h4, w)+b)
 
 # 定义loss,optimizer
 cross_entropy = -tf.reduce_mean(y_ * tf.log(tf.clip_by_value(y, 1e-10, 1.0)))
-train_step = tf.train.AdagradOptimizer(0.35).minimize(cross_entropy)
+train_step = tf.train.AdagradOptimizer(0.001).minimize(cross_entropy)
 
 correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))       # 高维度的
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))    # 要用reduce_mean
