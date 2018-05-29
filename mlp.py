@@ -27,8 +27,8 @@ h3 = add_layer(h2, 128, 64, keep_prob, tf.nn.relu)
 h4 = add_layer(h3, 64, 32, keep_prob, tf.nn.relu)
 
 # 输出层
-w = tf.Variable(tf.zeros([32, 2]))
-b = tf.Variable(tf.zeros([2]))
+w = tf.Variable(tf.truncated_normal([32, 2], stddev=0.1))
+b = tf.Variable(tf.truncated_normal([2], stddev=0.1))
 y = tf.nn.softmax(tf.matmul(h4, w)+b)
 
 # 定义loss,optimizer
@@ -72,7 +72,7 @@ for i in range(1000):
         '''if np.abs(acc_prev - train_accuracy) < 1e-6:
             break
         acc_prev = train_accuracy'''
-        m_saver.save(sess, './models/mlp_model', global_step=i)
+        m_saver.save(sess, './models/mlp_model.ckpt', global_step=i)
 
 
 print sess.eval(accuracy, feed_dict={x:input_X, y_:input_Y, keep_prob:1.0})
