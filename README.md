@@ -36,5 +36,11 @@ accuracy = (TP + TN) / (TP + FP + TN + FN)
 F1-score = 2 * precision rate * recall rate / (precision rate + recall rate)
 
 
+## 修改日志
+1.修复了数据格式[0, 1]的问题</br>
+2.修复了学习率太小损失函数维NAN的问题</br>
+3.影响准确率为1的因素有：准确率函数定义错误，模型没有更新
+
+
 
 
