@@ -30,10 +30,10 @@ def cos_dist(a, b):
 
 
 def process(inpath, outpath):
-	word_vec_fasttext_dict=gf.load_word_vec('../../test/fasttext_fin_model_50.vec') #word embedding from fasttxt
-	word_vec_word2vec_dict = gf.load_word_vec('../../test/word2vec.txt') #word embedding from word2vec
-	tfidf_dict=gf.load_tfidf_dict('../../test/atec_nl_sim_tfidf.txt')
-	vocabulary_word2index, vocabulary_index2word, vocabulary_label2index, vocabulary_index2label = gf.create_vocabulary('../../test/atec_nlp_sim_train.csv',60000,name_scope='',tokenize_style='')
+	#word_vec_fasttext_dict=gf.load_word_vec('../../test/fasttext_fin_model_50.vec') #word embedding from fasttxt
+	#word_vec_word2vec_dict = gf.load_word_vec('../../test/word2vec.txt') #word embedding from word2vec
+	#tfidf_dict=gf.load_tfidf_dict('../../test/atec_nl_sim_tfidf.txt')
+	#vocabulary_word2index, vocabulary_index2word, vocabulary_label2index, vocabulary_index2label = gf.create_vocabulary('../../test/atec_nlp_sim_train.csv',60000,name_scope='',tokenize_style='')
 	reader = pywrap_tensorflow.NewCheckpointReader('../modelss/mlp_model')  
 	var_to_shape_map = reader.get_variable_to_shape_map()  
 	for key in var_to_shape_map:  
@@ -61,14 +61,14 @@ def process(inpath, outpath):
 		for line in fin:
 			sen1, sen2,label = line.strip().split('\t')
 			#print sen1,sen2
-			features_vector = gf.data_mining_features(count,sen1,sen2,vocabulary_word2index,word_vec_fasttext_dict,word_vec_word2vec_dict,tfidf_dict, n_gram=8)
-			#print features_vector
+			features_vector = gf.get_feature(count,sen1,sen2)
+			print features_vector
 			result = sess.run(y,feed_dict={x: [features_vector],keep_prob:1.0})
 			print(result)
 			if result[0][0] > result[0][1]:
-				fout.write(str(count) + '\t' + result + '\t1\n')
+				fout.write(str(count) + '\t' + str(result) + '\t1\n')
 			else:
-				fout.write(str(count) + '\t' + result +  '\t0\n')
+				fout.write(str(count) + '\t' + str(result) +  '\t0\n')
 			count = count + 1
 			#else:
 				#fout.write(lineno + '\t0\n')
