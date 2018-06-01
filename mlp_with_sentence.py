@@ -49,7 +49,7 @@ for line in input_file:
     i += 1
     record = line.split(',')
     input_x.append(np.array(record[0:512]))
-    if record[-1] == '1':
+    if record[-1].strip() == '1':
         input_y.append([1.0, 0.0])
     else:
         input_y.append([0.0, 1.0])
