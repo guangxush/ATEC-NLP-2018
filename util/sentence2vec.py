@@ -7,7 +7,7 @@ import numpy as np
 jieba.add_word('花呗')
 jieba.add_word('借呗')
 
-
+# 将一个句子转换成126维的词向量
 def sentence2vec(input_file):
     csv_file = csv.reader(open(input_file, 'r'))
     for item in csv_file:
@@ -37,7 +37,7 @@ def get_vector_one_sentence(sentence,model):
     res_vec_list = (res_vec / count).tolist()
     return res_vec_list
 
-
+# 将两个句子转换成一个216+216的向量
 def get_vector_two_sentence(sentence1, sentence2, model):
     sen1 = get_vector_one_sentence(sentence1, model)
     sen2 = get_vector_one_sentence(sentence2, model)
