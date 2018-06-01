@@ -28,7 +28,7 @@ def get_vector_one_sentence(sentence,model):
     count = 0
     for word in (sen):
         try:
-            c = model[word.decode('utf-8')]
+            c = model[word]
         except KeyError:
             #print ('not in vocabulary')
             c = np.zeros(256, dtype=np.float32)
