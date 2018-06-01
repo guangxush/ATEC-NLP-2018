@@ -20,11 +20,9 @@ def sentence2vec(input_file):
                 print(sen2.decode('utf-8'))
 
 
-def get_vector_one_sentence(sentence):
+def get_vector_one_sentence(sentence,model):
     #结巴分词
     sen = jieba.cut(sentence)
-    #word2vec转换成向量
-    model = gensim.models.Word2Vec.load('../models/word2vec_wx')
     #处理sen
     res_vec = np.zeros(256, dtype=np.float32)
     count = 0
@@ -40,9 +38,9 @@ def get_vector_one_sentence(sentence):
     return res_vec_list
 
 
-def get_vector_two_sentence(sentence1, sentence2):
-    sen1 = get_vector_one_sentence(sentence1)
-    sen2 = get_vector_one_sentence(sentence2)
+def get_vector_two_sentence(sentence1, sentence2,model):
+    sen1 = get_vector_one_sentence(sentence1, model)
+    sen2 = get_vector_one_sentence(sentence2, model)
     print(sen1)
     print(sen2)
     return np.array(sen1+sen2, dtype=np.float32)
@@ -51,6 +49,8 @@ def get_vector_two_sentence(sentence1, sentence2):
 if __name__ == '__main__':
     '''input_file = '../raw_data/atec_nlp_sim_train.csv'
     sentence2vec(input_file)'''
+    #word2vec转换成向量
+    model = gensim.models.Word2Vec.load('../models/word2vec_wx')
     sentence1 = "借呗逾期短信通知"
     sentence2 = "如何购买花呗短信通知"
-    print(get_vector_two_sentence(sentence1.decode('utf-8'), sentence2.decode('utf-8')))
+    print(get_vector_two_sentence(sentence1.decode('utf-8'), sentence2.decode('utf-8')), model)
