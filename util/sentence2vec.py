@@ -39,8 +39,8 @@ def get_vector_one_sentence(sentence,model):
 
 
 def get_vector_two_sentence(sentence1, sentence2, model):
-    sen1 = get_vector_one_sentence(sentence1.decode('utf-8'), model)
-    sen2 = get_vector_one_sentence(sentence2.decode('utf-8'), model)
+    sen1 = get_vector_one_sentence(sentence1, model)
+    sen2 = get_vector_one_sentence(sentence2, model)
     print(sen1)
     print(sen2)
     return np.array(sen1+sen2, dtype=np.float32)
