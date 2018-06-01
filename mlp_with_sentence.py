@@ -21,7 +21,6 @@ x = tf.placeholder(tf.float32, [None, 512], name='x')
 y_ = tf.placeholder(tf.float32, [None, 2], name='pre')
 keep_prob = tf.placeholder(tf.float32, name='keep_probe')  # 概率
 
-
 h1 = add_layer(x, 512, 128, keep_prob, tf.nn.relu)
 h2 = add_layer(h1, 128, 64, keep_prob, tf.nn.relu)
 h3 = add_layer(h2, 64, 32, keep_prob, tf.nn.relu)
@@ -49,7 +48,7 @@ for line in input_file:
     i += 1
     record = line.split(',')
     input_x.append(np.array(record[0:512]))
-    if record[-1].strip() == '1':
+    if record[-1] == '1':
         input_y.append([1.0, 0.0])
     else:
         input_y.append([0.0, 1.0])
@@ -70,22 +69,26 @@ sess = tf.Session()
 sess.run(init)
 m_saver = tf.train.Saver()
 
-for i in range(10000):
+for i in range(1000):
     sess.run(train_step, feed_dict={x: input_X, y_: input_Y, keep_prob: 0.75})
-    if i % 1000 == 0:
+    if i % 10 == 0:
         train_accuracy, out, out2, loss = sess.run([accuracy, y, y_, cross_entropy],
                                                    feed_dict={x: input_X, y_: input_Y, keep_prob: 0.75})
+        print train_accuracy
         # train_loss = sess.run(correct_prediction, feed_dict={x:input_X, y_:input_Y, keep_prob:0.75})
-        print(i)
+        '''print(i)
         print(train_accuracy)
         print(loss)
         print(out)
-        print('-----------')
+        print('-----------')'''
         # cost_accum.append(train_accuracy)
         '''if np.abs(acc_prev - train_accuracy) < 1e-6:
             break
         acc_prev = train_accuracy'''
         if train_accuracy > 0.9:
+            fw = open('./models/result.txt', 'w')
+            for i in out:
+                fw.write(str(i) + '\n')
             break
 
 m_saver.save(sess, './models/mlp_model')
