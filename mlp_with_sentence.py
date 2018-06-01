@@ -3,8 +3,6 @@ import numpy as np
 import tensorflow as tf
 
 
-# import get_feature as gf
-
 # 定义添加隐含层的函数
 def add_layer(inputs, in_size, out_size, keep_prob=1.0, activation_function=None):
     Weights = tf.Variable(tf.truncated_normal([in_size, out_size], stddev=0.1))
@@ -19,20 +17,19 @@ def add_layer(inputs, in_size, out_size, keep_prob=1.0, activation_function=None
 
 
 # holder变量
-x = tf.placeholder(tf.float32, [None, 33], name='x')
+x = tf.placeholder(tf.float32, [None, 512], name='x')
 y_ = tf.placeholder(tf.float32, [None, 2], name='pre')
 keep_prob = tf.placeholder(tf.float32, name='keep_probe')  # 概率
 
-h1 = add_layer(x, 33, 512, keep_prob, tf.nn.relu)
-h2 = add_layer(h1, 512, 128, keep_prob, tf.nn.relu)
-h3 = add_layer(h2, 128, 64, keep_prob, tf.nn.relu)
-h4 = add_layer(h3, 64, 32, keep_prob, tf.nn.relu)
+
+h1 = add_layer(x, 512, 128, keep_prob, tf.nn.relu)
+h2 = add_layer(h1, 128, 64, keep_prob, tf.nn.relu)
+h3 = add_layer(h2, 64, 32, keep_prob, tf.nn.relu)
 
 # 输出层
 w = tf.Variable(tf.truncated_normal([32, 2], stddev=0.1))
-# w = tf.Variable(tf.zeros([32, 2]))
 b = tf.Variable(tf.zeros([2]))
-y = tf.nn.softmax(tf.matmul(h4, w) + b, name='predic')
+y = tf.nn.softmax(tf.matmul(h3, w) + b, name='predic')
 tf.add_to_collection('pred_network', y)
 
 # 定义loss,optimizer
@@ -42,17 +39,22 @@ train_step = tf.train.AdagradOptimizer(0.0001).minimize(cross_entropy)
 
 correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))  # 高维度的
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))  # 要用reduce_mean
-
-# cost_accum = []
 acc_prev = 0
 # 读取输入数据
-input_file = open('./data/train_data.csv', 'r')
+input_file = open('./data/word2vec_avg.csv', 'r')
 input_x = []
 input_y = []
+i = 0
 for line in input_file:
-    record = line.split('\t')
-    input_x.append(np.array(record[0][1:-1].split(',')))
-    input_y.append(np.array(record[-1][1:-2].split(',')))
+    i += 1
+    record = line.split(',')
+    input_x.append(np.array(record[0:512]))
+    if record[-1] == '1':
+        input_y.append([1.0, 0.0])
+    else:
+        input_y.append([0.0, 1.0])
+    if i > 39332:
+        break
 
 input_X = np.array(input_x, dtype=np.float32)
 input_Y = np.array(input_y, dtype=np.float32)
@@ -87,12 +89,4 @@ for i in range(10000):
             break
 
 m_saver.save(sess, './models/mlp_model')
-
-# test
-# word_vec_fasttext_dict=load_word_vec('../test/fasttext_fin_model_50.vec') #word embedding from fasttxt
-# word_vec_word2vec_dict = load_word_vec('../test/word2vec.txt') #word embedding from word2vec
-# tfidf_dict=load_tfidf_dict('../test/atec_nl_sim_tfidf.txt')
-# vocabulary_word2index, vocabulary_index2word, vocabulary_label2index, vocabulary_index2label = create_vocabulary('../test/atec_nlp_sim_train.csv',60000,name_scope='',tokenize_style='')
-# sess.run(accuracy,feed_dict={x:input_X, y_:input_Y, keep_prob:1.0})
-# print sess.eval(accuracy, feed_dict={x:input_X, y_:input_Y, keep_prob:1.0})
 sess.close()
