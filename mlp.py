@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import tensorflow as tf
-
+#import get_feature as gf
 
 #定义添加隐含层的函数
 def add_layer(inputs, in_size, out_size, keep_prob=1.0, activation_function=None):
@@ -17,9 +17,9 @@ def add_layer(inputs, in_size, out_size, keep_prob=1.0, activation_function=None
 
 
 # holder变量
-x = tf.placeholder(tf.float32, [None, 33])
-y_ = tf.placeholder(tf.float32, [None, 2])
-keep_prob = tf.placeholder(tf.float32)     # 概率
+x = tf.placeholder(tf.float32, [None, 33],name='x')
+y_ = tf.placeholder(tf.float32, [None, 2],name='pre')
+keep_prob = tf.placeholder(tf.float32,name='keep_probe')     # 概率
 
 h1 = add_layer(x, 33, 512, keep_prob, tf.nn.relu)
 h2 = add_layer(h1, 512, 128, keep_prob, tf.nn.relu)
@@ -28,12 +28,15 @@ h4 = add_layer(h3, 64, 32, keep_prob, tf.nn.relu)
 
 # 输出层
 w = tf.Variable(tf.truncated_normal([32, 2], stddev=0.1))
-b = tf.Variable(tf.truncated_normal([2], stddev=0.1))
-y = tf.nn.softmax(tf.matmul(h4, w)+b)
+#w = tf.Variable(tf.zeros([32, 2]))
+b = tf.Variable(tf.zeros([2]))
+y = tf.nn.softmax(tf.matmul(h4, w)+b,name='predic')
+tf.add_to_collection('pred_network',y)
 
 # 定义loss,optimizer
-cross_entropy = -tf.reduce_mean(y_ * tf.log(tf.clip_by_value(y, 1e-10, 1.0)))
-train_step = tf.train.AdagradOptimizer(0.001).minimize(cross_entropy)
+#cross_entropy = -tf.reduce_mean(tf.log(y_ * tf.clip_by_value(y, 1e-10, 1.0)))
+cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=y,labels=y_) 
+train_step = tf.train.AdagradOptimizer(0.0001).minimize(cross_entropy)
 
 correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))       # 高维度的
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))    # 要用reduce_mean
@@ -51,6 +54,8 @@ for line in input_file:
 
 input_X = np.array(input_x, dtype=np.float32)
 input_Y = np.array(input_y, dtype=np.float32)
+print input_X[0]
+print input_Y[0]
 print input_X.shape
 print input_Y.shape
 print input_X.dtype
@@ -62,18 +67,31 @@ sess.run(init)
 m_saver = tf.train.Saver()
 
 
-for i in range(1000):
+for i in range(10000):
     sess.run(train_step, feed_dict={x:input_X, y_:input_Y, keep_prob:0.75})
-    if i%100 == 0:
-        train_accuracy = sess.run(accuracy, feed_dict={x:input_X,y_:input_Y,keep_prob:1.0})
-        #train_loss = sess.run(correct_prediction, feed_dict={x:input_X, y_:input_Y, keep_prob:0.75})
-        print("step %d,train_accuracy %g" % (i, train_accuracy))
+    if i%1000 == 0:
+        train_accuracy,out,out2,loss = sess.run([accuracy,y,y_,cross_entropy], feed_dict={x:input_X,y_:input_Y,keep_prob:0.75})
+    #train_loss = sess.run(correct_prediction, feed_dict={x:input_X, y_:input_Y, keep_prob:0.75})
+        print(i)
+        print(train_accuracy)
+        print(loss)
+        print(out)
+        print('-----------')
         #cost_accum.append(train_accuracy)
         '''if np.abs(acc_prev - train_accuracy) < 1e-6:
             break
         acc_prev = train_accuracy'''
-        m_saver.save(sess, './models/mlp_model.ckpt', global_step=i)
+        if train_accuracy > 0.9:
+			break
+		
+m_saver.save(sess, './modelss/mlp_model')
 
 
-print sess.eval(accuracy, feed_dict={x:input_X, y_:input_Y, keep_prob:1.0})
+#test
+#word_vec_fasttext_dict=load_word_vec('../test/fasttext_fin_model_50.vec') #word embedding from fasttxt
+    #word_vec_word2vec_dict = load_word_vec('../test/word2vec.txt') #word embedding from word2vec
+        #tfidf_dict=load_tfidf_dict('../test/atec_nl_sim_tfidf.txt')
+            #vocabulary_word2index, vocabulary_index2word, vocabulary_label2index, vocabulary_index2label = create_vocabulary('../test/atec_nlp_sim_train.csv',60000,name_scope='',tokenize_style='')
+#sess.run(accuracy,feed_dict={x:input_X, y_:input_Y, keep_prob:1.0})
+#print sess.eval(accuracy, feed_dict={x:input_X, y_:input_Y, keep_prob:1.0})
 sess.close()
