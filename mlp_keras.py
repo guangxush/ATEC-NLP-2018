@@ -9,14 +9,14 @@ import numpy as np
 import sys
 
 
-def mlp(sample_dim):
+def mlp(sample_dim, loss_name):
     model = Sequential()
     model.add(Dense(512, kernel_initializer='glorot_uniform', activation='relu', input_dim=sample_dim))
     model.add(Dense(128, kernel_initializer='glorot_uniform', activation='relu'))
     model.add(Dense(64, kernel_initializer='glorot_uniform', activation='relu'))
     model.add(Dense(32, kernel_initializer='glorot_uniform', activation='relu'))
     model.add(Dense(2))
-    model.compile(loss=losses.mae, optimizer='adam')
+    model.compile(loss=loss_name, optimizer='adam')
     return model
 
 
@@ -25,18 +25,17 @@ if __name__ == '__main__':
     print('***** Start ATEC-NLP-2018 *****')
     print('Loading data ...')
     if data_flag:
-        x_train, y_train = load_data_with_sentences('./data/word2vec_avg.csv')
+        x_train, y_train = load_data_with_sentences('./data/test_data_balance.csv')
         x_dev, y_dev = load_data_with_sentences('./data/train_data_balance.csv')
     else:
-        x_train, y_train = load_data_with_features()
-        x_dev, y_dev = load_data_with_features()
+        x_train, y_train = load_data_with_features('./data/word2vec_avg.csv')
+        x_dev, y_dev = load_data_with_features('./data/word2vec_avg.csv')
     print('Training MLP model ...')
     check_pointer = ModelCheckpoint(filepath='models/mlp.hdf5', verbose=1, save_best_only=True,
                                     save_weights_only=True)
     early_stopping = EarlyStopping(patience=10)
     csv_logger = CSVLogger('logs/mlp.log')
-
-    mlp_model = mlp(sample_dim=x_train.shape[1])
+    mlp_model = mlp(sample_dim=x_train.shape[1], loss_name='losses.mae')
     mlp_model.fit(x_train, y_train, batch_size=128, epochs=100, verbose=1, validation_data=(x_dev, y_dev),
                   callbacks=[check_pointer, early_stopping, csv_logger])
 
