@@ -1,5 +1,6 @@
 *.pyc
 .idea/
+data/word2vec_avg.csv
 raw_data
 models
 !models/README.md
