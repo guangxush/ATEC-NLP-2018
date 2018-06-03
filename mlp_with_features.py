@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import tensorflow as tf
-
+from util.dataset import load_data_with_features
 
 # import get_feature as gf
 
@@ -46,22 +46,7 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))  # 要用redu
 # cost_accum = []
 acc_prev = 0
 # 读取输入数据
-input_file = open('./data/train_data.csv', 'r')
-input_x = []
-input_y = []
-for line in input_file:
-    record = line.split('\t')
-    input_x.append(np.array(record[0][1:-1].split(',')))
-    input_y.append(np.array(record[-1][1:-2].split(',')))
-
-input_X = np.array(input_x, dtype=np.float32)
-input_Y = np.array(input_y, dtype=np.float32)
-print input_X[0]
-print input_Y[0]
-print input_X.shape
-print input_Y.shape
-print input_X.dtype
-print input_Y.dtype
+input_X, input_Y = load_data_with_features()
 
 init = tf.global_variables_initializer()
 sess = tf.Session()

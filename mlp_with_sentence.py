@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import tensorflow as tf
+from util.dataset import load_data_with_sentences
 
 
 # 定义添加隐含层的函数
@@ -40,29 +41,7 @@ correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))  # 高维度的
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))  # 要用reduce_mean
 acc_prev = 0
 # 读取输入数据
-input_file = open('./data/word2vec_avg.csv', 'r')
-input_x = []
-input_y = []
-i = 0
-for line in input_file:
-    i += 1
-    record = line.split(',')
-    input_x.append(np.array(record[0:512]))
-    if record[-1] == '1':
-        input_y.append([1.0, 0.0])
-    else:
-        input_y.append([0.0, 1.0])
-    if i > 39332:
-        break
-
-input_X = np.array(input_x, dtype=np.float32)
-input_Y = np.array(input_y, dtype=np.float32)
-print input_X[0]
-print input_Y[0]
-print input_X.shape
-print input_Y.shape
-print input_X.dtype
-print input_Y.dtype
+input_X, input_Y = load_data_with_sentences()
 
 init = tf.global_variables_initializer()
 sess = tf.Session()
