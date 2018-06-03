@@ -32,7 +32,7 @@ if __name__ == '__main__':
         x_dev, y_dev = load_data_with_features('./data/word2vec_avg.csv')
     print('Training MLP model ...')
     check_pointer = ModelCheckpoint(filepath='models/mlp.hdf5', verbose=1, save_best_only=True,
-                                    save_weights_only=True)
+                                    save_weights_only=False)
     early_stopping = EarlyStopping(patience=10)
     csv_logger = CSVLogger('logs/mlp.log')
     mlp_model = mlp(sample_dim=x_train.shape[1], loss_name=losses.mae)
