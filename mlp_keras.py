@@ -4,7 +4,7 @@ from keras import Sequential
 from keras.layers import Dense, Dropout
 from keras.callbacks import ModelCheckpoint, EarlyStopping, CSVLogger
 from sklearn.metrics import mean_absolute_error
-from util.dataset import load_data_with_sentences, load_data_with_features
+from util.dataset import load_data_with_sentences_single_flag, load_data_with_features
 import numpy as np
 import sys
 
@@ -25,8 +25,8 @@ if __name__ == '__main__':
     print('***** Start ATEC-NLP-2018 *****')
     print('Loading data ...')
     if data_flag:
-        x_train, y_train = load_data_with_sentences()
-        x_dev, y_dev = load_data_with_sentences()
+        x_train, y_train = load_data_with_sentences_single_flag()
+        x_dev, y_dev = load_data_with_sentences_single_flag()
     else:
         x_train, y_train = load_data_with_features()
         x_dev, y_dev = load_data_with_features()
@@ -54,4 +54,4 @@ if __name__ == '__main__':
         print('Dev MAE:', mean_absolute_error(y_dev, results_dev_new))
         make_submission(result_path='submissions', results=results, model_name='MLP')'''
 
-    print('***** End UAI-CUP-2017 *****')
+    print('***** End ATEC-NLP-2018 *****')
