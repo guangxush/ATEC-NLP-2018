@@ -61,10 +61,14 @@ def load_data_with_features(filename):
     input_file = open(filename, 'r')
     input_x = []
     input_y = []
+    i = 0
     for line in input_file:
         record = line.split('\t')
         input_x.append(np.array(record[0][1:-1].split(',')))
         input_y.append(np.array(record[-1][1:-2].split(',')))
+        i += 1
+        if i > 39330:
+            break
     input_X = np.array(input_x, dtype=np.float32)
     input_Y = np.array(input_y, dtype=np.float32)
     print input_X[0]
