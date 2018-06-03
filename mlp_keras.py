@@ -4,7 +4,7 @@ from keras import Sequential
 from keras.layers import Dense, Dropout
 from keras.callbacks import ModelCheckpoint, EarlyStopping, CSVLogger
 from sklearn.metrics import mean_absolute_error
-from util.dataset import load_data_with_sentences_single_flag, load_data_with_features
+from util.dataset import load_data_with_sentences_single_flag, load_data_with_features, load_data_with_sentences
 import numpy as np
 import sys
 
@@ -15,7 +15,7 @@ def mlp(sample_dim):
     model.add(Dense(128, kernel_initializer='glorot_uniform', activation='relu'))
     model.add(Dense(64, kernel_initializer='glorot_uniform', activation='relu'))
     model.add(Dense(32, kernel_initializer='glorot_uniform', activation='relu'))
-    model.add(Dense(1))
+    model.add(Dense(2))
     model.compile(loss=losses.mae, optimizer='adam')
     return model
 
@@ -25,8 +25,8 @@ if __name__ == '__main__':
     print('***** Start ATEC-NLP-2018 *****')
     print('Loading data ...')
     if data_flag:
-        x_train, y_train = load_data_with_sentences_single_flag()
-        x_dev, y_dev = load_data_with_sentences_single_flag()
+        x_train, y_train = load_data_with_sentences('./data/word2vec_avg.csv')
+        x_dev, y_dev = load_data_with_sentences('./data/train_data_balance.csv')
     else:
         x_train, y_train = load_data_with_features()
         x_dev, y_dev = load_data_with_features()

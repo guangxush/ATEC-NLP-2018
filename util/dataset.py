@@ -2,8 +2,8 @@
 import numpy as np
 
 #加载句子特征，标签2维
-def load_data_with_sentences():
-    input_file = open('./data/word2vec_avg.csv', 'r')
+def load_data_with_sentences(filename):
+    input_file = open(filename, 'r')
     input_x = []
     input_y = []
     i = 0
@@ -29,8 +29,8 @@ def load_data_with_sentences():
 
 
 #加载句子特征,标签1维
-def load_data_with_sentences_single_flag():
-    input_file = open('./data/word2vec_avg.csv', 'r')
+def load_data_with_sentences_single_flag(filename):
+    input_file = open(filename, 'r')
     input_x = []
     input_y = []
     i = 0
@@ -56,9 +56,9 @@ def load_data_with_sentences_single_flag():
 
 
 #加载特征工程之后的句子向量
-def load_data_with_features():
+def load_data_with_features(filename):
     # 读取输入数据
-    input_file = open('./data/train_data.csv', 'r')
+    input_file = open(filename, 'r')
     input_x = []
     input_y = []
     for line in input_file:
@@ -77,4 +77,5 @@ def load_data_with_features():
     return input_X, input_Y
 
 if __name__ == '__main__':
-    load_data_with_sentences()
+    filename = '../data/word2vec_avg.csv'
+    load_data_with_sentences(filename)
