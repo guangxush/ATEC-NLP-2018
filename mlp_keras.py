@@ -15,7 +15,7 @@ def mlp(sample_dim, loss_name):
     model.add(Dense(128, kernel_initializer='glorot_uniform', activation='relu'))
     model.add(Dense(64, kernel_initializer='glorot_uniform', activation='relu'))
     model.add(Dense(32, kernel_initializer='glorot_uniform', activation='relu'))
-    model.add(Dense(2))
+    model.add(Dense(1))
     model.compile(loss=loss_name, optimizer='adam')
     return model
 

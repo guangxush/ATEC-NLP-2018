@@ -64,9 +64,7 @@ def load_data_with_features(filename):
     for line in input_file:
         record = line.split(',')
         input_x.append(record[0:512])
-        input_y.append(record[512])
-
-
+        input_y.append([record[512]])
     input_X = np.array(input_x, dtype=np.float32)
     input_Y = np.array(input_y, dtype=np.float32)
     print input_X[0]
