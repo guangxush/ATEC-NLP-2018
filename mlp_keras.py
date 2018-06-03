@@ -35,7 +35,7 @@ if __name__ == '__main__':
                                     save_weights_only=True)
     early_stopping = EarlyStopping(patience=10)
     csv_logger = CSVLogger('logs/mlp.log')
-    mlp_model = mlp(sample_dim=x_train.shape[1], loss_name='losses.mae')
+    mlp_model = mlp(sample_dim=x_train.shape[1], loss_name=losses.mae)
     mlp_model.fit(x_train, y_train, batch_size=128, epochs=100, verbose=1, validation_data=(x_dev, y_dev),
                   callbacks=[check_pointer, early_stopping, csv_logger])
 
