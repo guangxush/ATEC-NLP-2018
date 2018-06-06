@@ -7,7 +7,6 @@ import os
 import re
 import csv
 import codecs
-
 import jieba
 import numpy as np
 
@@ -30,7 +29,7 @@ sys.setdefaultencoding('utf-8')
 ########################################
 # set directories and parameters
 ########################################
-DATA_DIR = '../dataset/'
+DATA_DIR = '../data/'
 EMBEDDING_FILE = '../model/w2v/w2v.mod'
 TRAIN_DATA_FILE = DATA_DIR + 'mytrain_pair.csv'
 TEST_DATA_FILE = DATA_DIR + 'mytest_pair.csv'
@@ -61,6 +60,45 @@ save_path = "../model/lstm"
 tokenizer_name = "tokenizer.pkl"
 embedding_matrix_path = "../model/lstm/embedding_matrix.npy"
 
+########################################
+# prepare embeddings
+########################################
+print('Preparing embedding matrix')
+word2vec = Word2Vec.load(EMBEDDING_FILE)
+
+nb_words = min(MAX_NB_WORDS, len(word_index)) + 1
+
+embedding_matrix = np.zeros((nb_words, EMBEDDING_DIM))
+for word, i in word_index.items():
+    if word in word2vec.wv.vocab:
+        embedding_matrix[i] = word2vec.wv.word_vec(word)
+    else:
+        print word
+print('Null word embeddings: %d' % np.sum(np.sum(embedding_matrix, axis=1) == 0))
+
+np.save(embedding_matrix_path, embedding_matrix)
+
+
+# #######################################
+# # sample train/validation data
+# #######################################
+# np.random.seed(1234)
+# perm = np.random.permutation(len(data_1))
+# idx_train = perm[:int(len(data_1) * (1 - VALIDATION_SPLIT))]
+# idx_val = perm[int(len(data_1) * (1 - VALIDATION_SPLIT)):]
+#
+# data_1_train = np.vstack((data_1[idx_train], data_2[idx_train]))
+# data_2_train = np.vstack((data_2[idx_train], data_1[idx_train]))
+# labels_train = np.concatenate((labels[idx_train], labels[idx_train]))
+#
+# data_1_val = np.vstack((data_1[idx_val], data_2[idx_val]))
+# data_2_val = np.vstack((data_2[idx_val], data_1[idx_val]))
+# labels_val = np.concatenate((labels[idx_val], labels[idx_val]))
+
+# weight_val = np.ones(len(labels_val))
+# if re_weight:
+#     weight_val *= 0.472001959
+#     weight_val[labels_val == 0] = 1.309028344
 
 ########################################
 # define the model structure
@@ -90,11 +128,8 @@ def get_model():
     merged = BatchNormalization()(merged)
     preds = Dense(1, activation='sigmoid')(merged)
 
-    model = Model(inputs=[sequence_1_input, sequence_2_input], \
-                  outputs=preds)
-    model.compile(loss='binary_crossentropy',
-                  optimizer='nadam',
-                  metrics=['acc'])
+    model = Model(inputs=[sequence_1_input, sequence_2_input], outputs=preds)
+    model.compile(loss='binary_crossentropy', optimizer='nadam', metrics=['acc'])
     model.summary()
     return model
 
@@ -123,3 +158,8 @@ def train_model():
 
 if __name__ == '__main__':
     train_model()
+
+# predicts = model.predict([test_data_1, test_data_2], batch_size=10, verbose=1)
+
+# for i in range(len(test_ids)):
+#    print "t1: %s, t2: %s, score: %s" % (test_texts_1[i], test_texts_2[i], predicts[i])
