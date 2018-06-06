@@ -70,5 +70,5 @@ for i in range(1000):
                 fw.write(str(i) + '\n')
             break
 
-m_saver.save(sess, './models/mlp_model')
+m_saver.save(sess, '../models/mlp_model')
 sess.close()

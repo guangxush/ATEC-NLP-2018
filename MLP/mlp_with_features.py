@@ -71,7 +71,7 @@ for i in range(10000):
         if train_accuracy > 0.9:
             break
 
-m_saver.save(sess, './models/mlp_model')
+m_saver.save(sess, '../models/mlp_model')
 
 # test
 # word_vec_fasttext_dict=load_word_vec('../test/fasttext_fin_model_50.vec') #word embedding from fasttxt
