@@ -13,7 +13,7 @@ from keras.preprocessing.sequence import pad_sequences
 import keras.preprocessing.text
 import sys
 import cPickle
-from lstm import get_model
+from sim_lstm import get_model
 
 reload(sys)
 sys.setdefaultencoding('utf-8')

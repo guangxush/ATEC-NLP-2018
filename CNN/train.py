@@ -7,7 +7,6 @@ import time
 import numpy as np
 import tensorflow as tf
 from tensorflow.contrib import learn
-
 import data_helper
 from CNN_model import TextCNN
 
