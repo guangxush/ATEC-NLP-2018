@@ -97,7 +97,7 @@ def load_all_sentence(filename,dim):
             sen2_list = list(jieba.cut(sen2))
             cur_sen = sen1_list+sen2_list
             result_sentences.append(cur_sen);
-            result_labels.append(label)
+            result_labels.append(float(label))
         return result_sentences,result_labels
     elif dim == '2':
         result_sentences1=[]
@@ -109,7 +109,19 @@ def load_all_sentence(filename,dim):
             sen2_list = list(jieba.cut(sen2))
             result_sentences1.append(sen1_list);
             result_sentences2.append(sen2_list);
-            result_labels.append(label)
+            result_labels.append(float(label))
+        return result_sentences1,result_sentences2,result_labels
+    elif dim == '3':
+        result_sentences1=[]
+        result_sentences2=[]
+        result_labels = []
+        for line in fin:
+            sen1,sen2,label = line.strip().split('\t')
+            sen1_list = list(jieba.cut(sen1))
+            sen2_list = list(jieba.cut(sen2))
+            result_sentences1.append(sen1_list);
+            result_sentences2.append(sen2_list);
+            result_labels.append(float(label))
         return result_sentences1,result_sentences2,result_labels
 
 def sentence_to_index_array(p_new_dic, p_sen,dim,number):  # 文本转为索引数字模式
@@ -159,6 +171,18 @@ def sentence_to_index_array_for_test(p_new_dic, p_sen):  # 文本转为索引数
         except:
             new_sentences.append(0)  # 索引字典里没有的词转为数字
     return np.array(new_sentences)
+
+def get_balance_data():
+    fin = open('../data/inputadd.txt','r')
+    fw = open('../data/inputadd_balance.txt','w')
+    count0 = 0
+    for line in fin:
+        number,sen1,sen2,label = line.strip().split('\t')
+        if label == '1':
+            fw.write(line)
+        if label == '0':
+            count0 = count0 + 1
+            if (count0 < 5000):
+                fw.write(line)
 if __name__ == '__main__':
-    filename = '../data/word2vec_avg.csv'
-    load_data_with_features(filename)
+    get_balance_data()
