@@ -103,7 +103,7 @@ def train_model(data_1, data_2, labels):
     model = get_model(n_symbols, embedding_weights)
     early_stopping = EarlyStopping(monitor='val_loss', patience=3)
     bst_model_path = STAMP + '.h5'
-    model_checkpoint = ModelCheckpoint(bst_model_path, save_best_only=True, save_weights_only=True)
+    model_checkpoint = ModelCheckpoint(bst_model_path, save_best_only=True, save_weights_only=False)
     hist = model.fit([data_1, data_2], labels, validation_data=([data_1, data_2], labels), epochs=100, batch_size=10, shuffle=True, callbacks=[early_stopping, model_checkpoint])
     model.load_weights(bst_model_path)
     bst_score = min(hist.history['loss'])
