@@ -100,7 +100,7 @@ def get_model(nb_words, embedding_matrix):
 
 def train_model(data_1, data_2, labels):
     print(STAMP)
-    model = get_model(n_symbols,embedding_weights)
+    model = get_model(n_symbols, embedding_weights)
     early_stopping = EarlyStopping(monitor='val_loss', patience=3)
     bst_model_path = STAMP + '.h5'
     model_checkpoint = ModelCheckpoint(bst_model_path, save_best_only=True, save_weights_only=True)
@@ -113,7 +113,7 @@ def train_model(data_1, data_2, labels):
 
 if __name__ == '__main__':
     model = Word2Vec.load('./models/word2vec_wx')
-    index_dict, word_vectors= create_dictionaries(model)
+    index_dict, word_vectors = create_dictionaries(model)
     new_dic = index_dict
     print ("Setting up Arrays for Keras Embedding Layer...")
     n_symbols = len(index_dict) + 1  # 索引数字的个数，因为有的词语索引为0，所以+1
@@ -129,9 +129,11 @@ if __name__ == '__main__':
     print("训练集1shape： " + str(train_dataset1.shape))
     print("训练集2shape： " + str(train_dataset2.shape))
     train_model(train_dataset1,train_dataset2,labels)
+    #预测部分的代码
+    lstm_model = get_model(n_symbols, embedding_weights)
+    bst_model_path = STAMP + '.h5'
+    model.load_weights(bst_model_path, by_name=True)
+    predicts = model.predict([test_data_1, test_data_2], batch_size=10, verbose=1)
+    for i in range(len(test_ids)):
+        print "t1: %s, t2: %s, score: %s" % (test_texts_1[i], test_texts_2[i], predicts[i])
 
-
-# predicts = model.predict([test_data_1, test_data_2], batch_size=10, verbose=1)
-
-# for i in range(len(test_ids)):
-#    print "t1: %s, t2: %s, score: %s" % (test_texts_1[i], test_texts_2[i], predicts[i])
