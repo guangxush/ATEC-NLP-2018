@@ -1,5 +1,7 @@
 *.pyc
 .idea/
+.txt
+.csv
 data/word2vec_avg.csv
 raw_data
 data
