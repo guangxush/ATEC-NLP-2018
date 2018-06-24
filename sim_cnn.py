@@ -3,7 +3,6 @@
 import numpy as np
 from gensim.models import Word2Vec
 np.random.seed(1337)
-from __future__ import print_function
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Input
 from keras.layers import Embedding
@@ -12,7 +11,7 @@ from keras.layers.merge import concatenate
 from keras.models import Model
 from keras.layers.normalization import BatchNormalization
 from keras.callbacks import EarlyStopping, ModelCheckpoint
-from util.dataset import sentence_to_index_array,create_dictionaries,load_all_sentence
+from util.dataset import sentence_to_index_array, create_dictionaries, load_all_sentence
 
 
 # set parameters:
