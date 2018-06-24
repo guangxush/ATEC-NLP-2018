@@ -2,6 +2,7 @@
 .idea/
 .txt
 .csv
+venv
 data/word2vec_avg.csv
 raw_data
 data
