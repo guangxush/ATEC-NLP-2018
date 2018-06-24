@@ -182,7 +182,7 @@ def get_balance_data():
             fw.write(line)
         if label == '0':
             count0 = count0 + 1
-            if (count0 < 5000):
+            if (count0 < 10000):
                 fw.write(line)
 if __name__ == '__main__':
     get_balance_data()
