@@ -47,14 +47,14 @@ tokenizer_name = "tokenizer.pkl"
 embedding_matrix_path = "./models/cnn/embedding_matrix.npy"
 
 
-def cnn_model():
-    model = Sequential()
-
+def cnn_model(nb_words, embedding_matrix):
     # we start off with an efficient embedding layer which maps
     # our vocab indices into embedding_dims dimensions
-    embedding_layer = Embedding(max_features,
+    embedding_layer = Embedding(nb_words,
                                 embedding_dims,
-                                input_length=maxlen)
+                                weights=[embedding_matrix],
+                                input_length=max_sequence_length,
+                                trainable=False)
 
     # we add a Convolution1D, which will learn filters
     # word group filters of size filter_length:
@@ -112,7 +112,7 @@ def cnn_model():
 
 
 def train_model(data_1, data_2, labels):
-    model = cnn_model()
+    model = cnn_model(n_symbols, embedding_weights)
     early_stopping = EarlyStopping(monitor='val_loss', patience=3)
     bst_model_path = STAMP + '.h5'
     model_checkpoint = ModelCheckpoint(bst_model_path, save_best_only=True, save_weights_only=False)
