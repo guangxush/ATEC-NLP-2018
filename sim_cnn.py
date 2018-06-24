@@ -112,7 +112,7 @@ def cnn_model():
 
 
 def train_model(data_1, data_2, labels):
-    model = cnn_model(n_symbols, embedding_weights)
+    model = cnn_model()
     early_stopping = EarlyStopping(monitor='val_loss', patience=3)
     bst_model_path = STAMP + '.h5'
     model_checkpoint = ModelCheckpoint(bst_model_path, save_best_only=True, save_weights_only=False)
