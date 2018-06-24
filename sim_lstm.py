@@ -41,7 +41,7 @@ VALIDATION_SPLIT = 0.1
 # rate_drop_lstm = 0.15 + np.random.rand() * 0.25
 # rate_drop_dense = 0.15 + np.random.rand() * 0.25
 
-num_lstm = 175
+num_lstm = 100
 num_dense = 100
 rate_drop_lstm = 0.15
 rate_drop_dense = 0.15
