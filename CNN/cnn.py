@@ -43,9 +43,9 @@ STAMP = './models/cnn/cnn_%d_%d_%.2f_%.2f' % (num_cnn, num_dense, rate_drop_cnn,
 
 save = True
 load_tokenizer = False
-save_path = "./models/lstm"
+save_path = "./models/cnn"
 tokenizer_name = "tokenizer.pkl"
-embedding_matrix_path = "./models/lstm/embedding_matrix.npy"
+embedding_matrix_path = "./models/cnn/embedding_matrix.npy"
 
 
 def cnn_model():
