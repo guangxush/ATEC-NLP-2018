@@ -36,7 +36,7 @@ if __name__ == '__main__':
         result_dim = 1
         filepath = './models/mlp_features.hdf5'
     print('Training MLP model ...')
-    check_pointer = ModelCheckpoint(filepath=filepath, monitor='val_acc', verbose=1, save_best_only=True,
+    check_pointer = ModelCheckpoint(filepath=filepath, monitor='val_f1', verbose=1, save_best_only=True,
                                     save_weights_only=False)
     early_stopping = EarlyStopping(patience=10)
     csv_logger = CSVLogger('logs/mlp.log')
