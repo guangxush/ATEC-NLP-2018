@@ -7,7 +7,7 @@ from sklearn.metrics import mean_absolute_error
 from util.dataset import load_data_with_sentences_single_flag, load_data_with_features, load_data_with_sentences
 import numpy as np
 import sys
-from util.f2 import f2_loss
+from util.f1 import f1
 
 
 def mlp(sample_dim, loss_name, result_dim):
@@ -17,7 +17,7 @@ def mlp(sample_dim, loss_name, result_dim):
     model.add(Dense(64, kernel_initializer='glorot_uniform', activation='relu'))
     model.add(Dense(32, kernel_initializer='glorot_uniform', activation='relu'))
     model.add(Dense(result_dim))
-    model.compile(loss=loss_name, optimizer='adam')
+    model.compile(loss=loss_name, optimizer='adam',metrics=[f1])
     return model
 
 
