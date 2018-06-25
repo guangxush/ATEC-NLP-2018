@@ -38,7 +38,7 @@ if __name__ == '__main__':
     print('Training MLP model ...')
     check_pointer = ModelCheckpoint(filepath=filepath, monitor='val_f1', verbose=1, save_best_only=True,
                                     save_weights_only=False)
-    early_stopping = EarlyStopping(patience=10)
+    early_stopping = EarlyStopping(patience=30)
     csv_logger = CSVLogger('logs/mlp.log')
     mlp_model = mlp(sample_dim=x_train.shape[1], loss_name=losses.mae, result_dim=result_dim)
     mlp_model.fit(x_train, y_train, batch_size=128, epochs=100, verbose=1, validation_data=(x_dev, y_dev),
