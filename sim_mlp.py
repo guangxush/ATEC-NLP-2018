@@ -26,15 +26,15 @@ if __name__ == '__main__':
     print('***** Start ATEC-NLP-2018 *****')
     print('Loading data ...')
     if data_flag:
-        x_train, y_train = load_data_with_sentences('../data/test_data_balance.csv')
-        x_dev, y_dev = load_data_with_sentences('../data/train_data_balance.csv')
+        x_train, y_train = load_data_with_sentences('./data/test_data_balance.csv')
+        x_dev, y_dev = load_data_with_sentences('./data/train_data_balance.csv')
         result_dim = 2
-        filepath = '../models/mlp_sentences.hdf5'
+        filepath = './models/mlp_sentences.hdf5'
     else:
-        x_train, y_train = load_data_with_features('../data/word2vec_avg.csv')
-        x_dev, y_dev = load_data_with_features('../data/word2vec_avg.csv')
+        x_train, y_train = load_data_with_features('./data/word2vec_avg.csv')
+        x_dev, y_dev = load_data_with_features('./data/word2vec_avg.csv')
         result_dim = 1
-        filepath = '../models/mlp_features.hdf5'
+        filepath = './models/mlp_features.hdf5'
     print('Training MLP model ...')
     check_pointer = ModelCheckpoint(filepath=filepath, verbose=1, save_best_only=True,
                                     save_weights_only=False)
