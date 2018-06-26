@@ -17,7 +17,7 @@ def mlp(sample_dim, loss_name, result_dim):
     model.add(Dense(64, kernel_initializer='glorot_uniform', activation='relu'))
     model.add(Dense(32, kernel_initializer='glorot_uniform', activation='relu'))
     model.add(Dense(result_dim))
-    model.compile(loss=loss_name, optimizer='adam',metrics=[f1])
+    model.compile(loss=loss_name, optimizer='adam', metrics=[f1])
     return model
 
 
@@ -43,19 +43,4 @@ if __name__ == '__main__':
     mlp_model = mlp(sample_dim=x_train.shape[1], loss_name=losses.mae, result_dim=result_dim)
     mlp_model.fit(x_train, y_train, batch_size=128, epochs=100, verbose=1, validation_data=(x_dev, y_dev),
                   callbacks=[check_pointer, early_stopping, csv_logger])
-
-    '''if submit_flag:
-        print('Generate submission ...')
-        mlp_model.load_weights(filepath='models/mlp.hdf5')
-        results = mlp_model.predict(x_test).reshape(-1, 1)
-        results_dev = mlp_model.predict(x_dev).reshape(-1, 1)
-        results_dev_new = []
-        for item in results_dev:
-            item_value = item[0]
-            item_value = np.round(item_value)
-            results_dev_new.append(item_value)
-        results_dev_new = np.asarray(results_dev_new).reshape(-1, 1)
-        print('Dev MAE:', mean_absolute_error(y_dev, results_dev_new))
-        make_submission(result_path='submissions', results=results, model_name='MLP')'''
-
     print('***** End ATEC-NLP-2018 *****')
