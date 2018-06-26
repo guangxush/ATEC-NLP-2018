@@ -85,6 +85,24 @@ def create_dictionaries(p_model):
     w2vec = {word: p_model[word] for word in w2indx.keys()}  # 词语的词向量
     return w2indx, w2vec
 
+def create_dictionariesfromword():
+    w2indx = {}
+    w2vec = {}
+    fr = open('./models/word2vec_c','r')
+    number = -1
+    w2indx[''] = 0
+    w2vec[''] =np.zeros(256)
+    for line in fr:
+        linelist = line.strip().split(' ')
+        if len(linelist) > 2 and len(linelist) == 257:
+            cur = []
+            w2indx[str(linelist[0])] = number  # 词语的索引，从1开始编号
+            for i in xrange(1,len(linelist)):
+                cur.append(float(linelist[i]))
+            w2vec[str(linelist[0])] = cur
+        number = number + 1
+    return w2indx, w2vec
+
 def load_all_sentence(filename,dim):
     fin = open(filename,'r')
     if dim == '1':
@@ -185,4 +203,6 @@ def get_balance_data():
             if (count0 < 10000):
                 fw.write(line)
 if __name__ == '__main__':
-    get_balance_data()
+    index_dict,word_vectors = create_dictionariesfromword()
+    print(str(len(index_dict)))
+    print(str(len(word_vectors)))
