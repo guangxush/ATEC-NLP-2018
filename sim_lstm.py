@@ -42,7 +42,7 @@ rate_drop_dense = 0.15
 act = 'relu'
 re_weight = True  # whether to re-weight classes to fit the 17.5% share in test set
 
-STAMP = './models/lstm/lstm_%d_%d_%.2f_%.2f' % (num_lstm, num_dense, rate_drop_lstm, \
+STAMP = './models/lstm/lstm_f1_%d_%d_%.2f_%.2f' % (num_lstm, num_dense, rate_drop_lstm, \
                                                 rate_drop_dense)
 
 save = True
