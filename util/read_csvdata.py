@@ -16,6 +16,7 @@ def read_csv_data(input_file):
     print(sen_flag.shape)
     return
 
+
 if __name__ == '__main__':
     input_file = '../data/word2vec_avg.csv'
     read_csv_data(input_file)

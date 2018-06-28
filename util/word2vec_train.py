@@ -2,6 +2,7 @@
 # coding:utf8
 
 import sys
+
 reload(sys)
 sys.setdefaultencoding("utf8")
 
@@ -27,8 +28,8 @@ model.save('word_embedding_128')
 # 返回和一个词语最相关的多个词语以及对应的相关度
 items = model.most_similar(u'中国')
 for item in items:
-	# 词的内容，词的相关度
-	print item[0], item[1]
+    # 词的内容，词的相关度
+    print item[0], item[1]
 
 # 返回两个词语之间的相关度
 model.similarity(u'男人', u'女人')

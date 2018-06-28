@@ -111,12 +111,12 @@ def train_model(data_1, data_2, labels, test_1, test_2, test_label, embedding_we
 
 
 if __name__ == '__main__':
-    model = Word2Vec.load('./models/word2vec_wx')
+    model = Word2Vec.load('./models/w2v.mod')
     index_dict, word_vectors = create_dictionaries(model)
     new_dic = index_dict
     print ("Setting up Arrays for Keras Embedding Layer...")
     n_symbols = len(index_dict) + 1  # 索引数字的个数，因为有的词语索引为0，所以+1
-    embedding_weights = np.zeros((n_symbols, 256))  # 创建一个n_symbols * 100的0矩阵
+    embedding_weights = np.zeros((n_symbols, 100))  # 创建一个n_symbols * 100的0矩阵
     for w, index in index_dict.items():  # 从索引为1的词语开始，用词向量填充矩阵
         embedding_weights[index, :] = word_vectors[w]  # 词向量矩阵，第一行是0向量（没有索引为0的词语，未被填充）
     print('length = ' + str(len(embedding_weights)))

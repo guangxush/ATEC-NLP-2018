@@ -19,7 +19,7 @@ def word2vec_avg(model, input_data, output_file):
     for line in raw_data_file:
         sen = line.split('\t')
         if len(sen) > 2:
-            #print(sen[2].strip())
+            # print(sen[2].strip())
             raw_data.append(sen[2].strip())
         else:
             raw_data.append('0')
@@ -38,7 +38,8 @@ def word2vec_avg(model, input_data, output_file):
             count += 1  # 计算相加元素的个数
             res_vec_list = (res_vec / count).tolist()
         if idx % 2 != 0:  # 注意idx从0开始遍历
-            out_file.write((','.join(str(i) for i in res_vec_list[:])) + ',' + str(raw_data[idx/2]) + '\n')  # 将sen2向量重新保存到文件中
+            out_file.write(
+                (','.join(str(i) for i in res_vec_list[:])) + ',' + str(raw_data[idx / 2]) + '\n')  # 将sen2向量重新保存到文件中
         else:
             out_file.write((','.join(str(i) for i in res_vec_list[:])) + ',')  # 将sen1向量重新保存到文件中
     print('******end word to avg_vec******')
@@ -54,7 +55,7 @@ def word2vec_all(model, input_data, output_file):
             pass
         else:
             cur_line = input_data.loc[idx][0].split('/')
-            next_line = input_data.loc[idx+1][0].split('/')
+            next_line = input_data.loc[idx + 1][0].split('/')
             cur_out_line = []
             next_out_line = []
             print(idx)
@@ -66,7 +67,7 @@ def word2vec_all(model, input_data, output_file):
                     print ('not in vocabulary')
                     c = 0
                 cur_out_line.append(str(c))  # 将当前行每一个单词转换成向量model[单词]
-            print(idx+1)
+            print(idx + 1)
             for word in next_line:
                 # print(word)
                 try:
@@ -75,23 +76,24 @@ def word2vec_all(model, input_data, output_file):
                     print ('not in vocabulary')
                     c = 0
                 next_out_line.append(str(c))  # 将下一行每一个单词转换成向量model[单词]
-            if(len(cur_out_line) == len(next_out_line)):
-                out_file.write(','.join(cur_out_line)+'\n')
+            if len(cur_out_line) == len(next_out_line):
+                out_file.write(','.join(cur_out_line) + '\n')
                 out_file.write(','.join(next_out_line) + '\n')
-            elif(len(cur_out_line) < len(next_out_line)):
+            elif len(cur_out_line) < len(next_out_line):
                 cur_out_line_final = cur_out_line
-                for i in range(len(cur_out_line), len(next_out_line)-1):
+                for i in range(len(cur_out_line), len(next_out_line) - 1):
                     cur_out_line_final.append(str(0))
                 out_file.write(','.join(cur_out_line_final) + '\n')
                 out_file.write(','.join(next_out_line) + '\n')
             else:
                 out_file.write(','.join(cur_out_line) + '\n')
                 next_out_line_final = next_out_line
-                for i in range(len(next_out_line), len(cur_out_line)-1):
+                for i in range(len(next_out_line), len(cur_out_line) - 1):
                     next_out_line_final.append(str(0))
                 out_file.write(','.join(next_out_line_final) + '\n')
     print('******end word to all_vec******')
     return
+
 
 if __name__ == '__main__':
     avg_flag = True if sys.argv[1] == "avg" else False
