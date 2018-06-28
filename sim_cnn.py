@@ -24,7 +24,7 @@ TEST_DATA_FILE = DATA_DIR + 'mytest_pair.csv'
 max_features = 5001
 maxlen = 100
 batch_size = 32
-embedding_dims = 256
+embedding_dims = 100
 filters = 250
 kernel_size = 3
 hidden_dims = 250
@@ -124,12 +124,12 @@ def train_model(data_1, data_2, labels):
 
 
 if __name__ == '__main__':
-    model = Word2Vec.load('./models/word2vec_wx')
+    model = Word2Vec.load('./models/w2v.mod')
     index_dict, word_vectors = create_dictionaries(model)
     new_dic = index_dict
     print ("Setting up Arrays for Keras Embedding Layer...")
     n_symbols = len(index_dict) + 1  # 索引数字的个数，因为有的词语索引为0，所以+1
-    embedding_weights = np.zeros((n_symbols, 256))  # 创建一个n_symbols * 100的0矩阵
+    embedding_weights = np.zeros((n_symbols, 100))  # 创建一个n_symbols * 100的0矩阵
     for w, index in index_dict.items():  # 从索引为1的词语开始，用词向量填充矩阵
         embedding_weights[index, :] = word_vectors[w]  # 词向量矩阵，第一行是0向量（没有索引为0的词语，未被填充）
     train_dataset1,train_dataset2,labels = load_all_sentence('./data/inputadd.txt', '2')
