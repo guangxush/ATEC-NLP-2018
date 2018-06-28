@@ -72,12 +72,4 @@ for i in range(10000):
             break
 
 m_saver.save(sess, '../models/mlp_model')
-
-# test
-# word_vec_fasttext_dict=load_word_vec('../test/fasttext_fin_model_50.vec') #word embedding from fasttxt
-# word_vec_word2vec_dict = load_word_vec('../test/word2vec.txt') #word embedding from word2vec
-# tfidf_dict=load_tfidf_dict('../test/atec_nl_sim_tfidf.txt')
-# vocabulary_word2index, vocabulary_index2word, vocabulary_label2index, vocabulary_index2label = create_vocabulary('../test/atec_nlp_sim_train.csv',60000,name_scope='',tokenize_style='')
-# sess.run(accuracy,feed_dict={x:input_X, y_:input_Y, keep_prob:1.0})
-# print sess.eval(accuracy, feed_dict={x:input_X, y_:input_Y, keep_prob:1.0})
 sess.close()
