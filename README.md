@@ -7,20 +7,15 @@ jieba 0.39 </br>
 keras 2.x </br>
 
 ## Run
-ATEC-NLP-2018目录下的文件为各种不同的ML/DL模型代码，运行分为两种方式：
+ATEC-NLP-2018目录下的文件为各种不同的ML/DL模型代码，运行方式如下：
 
-- 只训练，不产生提交结果（用于测试代码的正确性和了解模型效果）,例如：
+- 训练并产生训练模型，训练模型保存在models中：
 
-		python XXX.py train
-
-- 训练且产生测试集结果用于提交，例如：
-
-		python XXX.py submit（bash run.sh INPUT_PATH OUTPUT_PATH）
+		CUDA_VISIBLE_DEVICES=0 python XXX.py
 
 
+## Score
 
-## 测试结果
-### 使用XXX方法
 |模型/方法	|Train f1|Dev f1|Pubulic Test A f1|Pubulic Test B f1|备注说明|
 |---------|:---:|:----:|:--:|:--:|------|
 |cosine距离 |0.4543|0.4189|0.4271|0.4271|直接用文本计算欧式距离|
