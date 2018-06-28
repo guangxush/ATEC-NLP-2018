@@ -106,8 +106,8 @@ def train_model(data_1, data_2, labels, test_1, test_2, test_label, embedding_we
     # fin.write(resultmy)
     # model.load_weights(bst_model_path)
     bst_score = min(hist.history['loss'])
-    bst_acc = max(hist.history['acc'])
-    print bst_acc, bst_score
+    bst_f1 = max(hist.history['f1'])
+    print bst_f1, bst_score
 
 
 if __name__ == '__main__':

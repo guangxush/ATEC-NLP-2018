@@ -118,8 +118,8 @@ def train_model(data_1, data_2, labels):
     hist = model.fit([data_1, data_2], labels, validation_data=([data_1, data_2], labels), epochs=100, batch_size=10, shuffle=True, callbacks=[early_stopping, model_checkpoint])
     model.load_weights(bst_model_path)
     bst_score = min(hist.history['loss'])
-    bst_acc = max(hist.history['acc'])
-    print(bst_acc, bst_score)
+    bst_f1 = max(hist.history['f1'])
+    print(bst_f1, bst_score)
 
 
 if __name__ == '__main__':
