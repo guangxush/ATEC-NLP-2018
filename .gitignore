@@ -2,12 +2,15 @@
 .idea/
 .txt
 .csv
+.hdf5
+.mod
+.npy
+.h5
 venv
-data/word2vec_avg.csv
+data
 raw_data
 data
 models
-!models/README.md
 !data/README.md
 .DS_Store
 *.ipynb
