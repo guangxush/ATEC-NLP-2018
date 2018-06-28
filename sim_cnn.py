@@ -3,7 +3,6 @@
 import numpy as np
 from gensim.models import Word2Vec
 np.random.seed(1337)
-from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Input
 from keras.layers import Embedding
 from keras.layers import Conv1D, GlobalMaxPooling1D
@@ -12,7 +11,7 @@ from keras.models import Model
 from keras.layers.normalization import BatchNormalization
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from util.dataset import sentence_to_index_array, create_dictionaries, load_all_sentence
-
+from util.f1 import f1
 
 # set parameters:
 DATA_DIR = './dataset/'
@@ -37,7 +36,7 @@ num_dense = 100
 act = 'relu'
 re_weight = True  # whether to re-weight classes to fit the 17.5% share in test set
 
-STAMP = './models/cnn/cnn_%d_%d_%.2f_%.2f' % (num_cnn, num_dense, rate_drop_cnn, \
+STAMP = './models/cnn/cnn_f1_%d_%d_%.2f_%.2f' % (num_cnn, num_dense, rate_drop_cnn, \
                                                 rate_drop_dense)
 
 save = True
@@ -89,7 +88,7 @@ def cnn_model(nb_words, embedding_matrix):
     model = Model(inputs=[sequence_1_input, sequence_2_input], outputs=preds)
     model.compile(loss='binary_crossentropy',
                   optimizer='nadam',
-                  metrics=['acc'])
+                  metrics=[f1])
     model.summary()
     return model
     model.add(Dense(hidden_dims))
@@ -102,7 +101,7 @@ def cnn_model(nb_words, embedding_matrix):
 
     model.compile(loss='binary_crossentropy',
                   optimizer='adam',
-                  metrics=['accuracy'])
+                  metrics=['f1'])
     model.summary()
     return model
 
@@ -113,9 +112,9 @@ def cnn_model(nb_words, embedding_matrix):
 
 def train_model(data_1, data_2, labels):
     model = cnn_model(n_symbols, embedding_weights)
-    early_stopping = EarlyStopping(monitor='val_loss', patience=3)
+    early_stopping = EarlyStopping(monitor='val_f1', patience=10)
     bst_model_path = STAMP + '.h5'
-    model_checkpoint = ModelCheckpoint(bst_model_path, save_best_only=True, save_weights_only=False)
+    model_checkpoint = ModelCheckpoint(bst_model_path, monitor='val_f1', save_best_only=True, save_weights_only=False)
     hist = model.fit([data_1, data_2], labels, validation_data=([data_1, data_2], labels), epochs=100, batch_size=10, shuffle=True, callbacks=[early_stopping, model_checkpoint])
     model.load_weights(bst_model_path)
     bst_score = min(hist.history['loss'])
