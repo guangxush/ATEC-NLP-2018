@@ -117,9 +117,12 @@ def train_model(data_1, data_2, labels):
     model_checkpoint = ModelCheckpoint(bst_model_path, monitor='val_f1', save_best_only=True, save_weights_only=False)
     hist = model.fit([data_1, data_2], labels, validation_data=([data_1, data_2], labels), epochs=100, batch_size=10, shuffle=True, callbacks=[early_stopping, model_checkpoint])
     model.load_weights(bst_model_path)
-    bst_score = min(hist.history['loss'])
+    bst_loss = min(hist.history['loss'])
+    bst_val_loss = min(hist.history['val_loss'])
+    print("bst_loss:" + str(bst_loss) + "bst_val_loss" + str(bst_val_loss))
+    bst_val_f1 = max(hist.history['val_f1'])
     bst_f1 = max(hist.history['f1'])
-    print(bst_f1, bst_score)
+    print("bst_f1:"+str(bst_f1)+"bst_val_f1"+str(bst_val_f1))
 
 
 if __name__ == '__main__':

@@ -105,9 +105,12 @@ def train_model(data_1, data_2, labels, test_1, test_2, test_label, embedding_we
     # fin = open('./result.txt','a')
     # fin.write(resultmy)
     # model.load_weights(bst_model_path)
-    bst_score = min(hist.history['loss'])
+    bst_loss = min(hist.history['loss'])
+    bst_val_loss = min(hist.history['val_loss'])
+    print("bst_loss:" + str(bst_loss) + "bst_val_loss" + str(bst_val_loss))
+    bst_val_f1 = max(hist.history['val_f1'])
     bst_f1 = max(hist.history['f1'])
-    print bst_f1, bst_score
+    print("bst_f1:"+str(bst_f1)+"bst_val_f1"+str(bst_val_f1))
 
 
 if __name__ == '__main__':
