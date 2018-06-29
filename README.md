@@ -50,6 +50,7 @@ F1-score = 2 * precision rate * recall rate / (precision rate + recall rate)
 - 2.sim_lstm还可以继续改进，最后一层Dense可以修改为计算两个向量的相似度，然后自定义损失函数，自定义层</br>
 - 3.可以把mlp得到的分数作为一个特征，然后找的轮子里面生成一些特征，这些特征采用XGboost或者随机森林预测，得到的效果可能会好一些</br>
 - 4.F1还有一些损失函数可以用sklearn得到，也可以自己写<br>
+- 5.把所有的数据随机选取20%作为验证机val_data<br>
 
 
 
