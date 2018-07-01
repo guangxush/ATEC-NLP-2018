@@ -11,8 +11,8 @@ from keras.models import Model
 from keras.layers.normalization import BatchNormalization
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 import sys
-#from util.f1 import f1
-from sklearn.metrics import f1_score as f1
+from util.f1 import f1
+#from sklearn.metrics import f1_score as f1
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -82,7 +82,7 @@ def get_model(nb_words, embedding_matrix):
     preds = Dense(1, activation='sigmoid')(merged)
     model = Model(inputs=[sequence_1_input, sequence_2_input], outputs=preds)
     model.compile(loss='binary_crossentropy',
-                  optimizer='nadam',
+                  optimizer='adam',
                   metrics=[f1])
     model.summary()
     return model
