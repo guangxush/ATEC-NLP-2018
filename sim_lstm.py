@@ -11,8 +11,8 @@ from keras.models import Model
 from keras.layers.normalization import BatchNormalization
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 import sys
-from util.f1 import f1
-from sklearn.metrics import f1_score
+#from util.f1 import f1
+from sklearn.metrics import f1_score as f1
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -83,7 +83,7 @@ def get_model(nb_words, embedding_matrix):
     model = Model(inputs=[sequence_1_input, sequence_2_input], outputs=preds)
     model.compile(loss='binary_crossentropy',
                   optimizer='nadam',
-                  metrics=[f1_score])
+                  metrics=[f1])
     model.summary()
     return model
 
@@ -99,7 +99,7 @@ def train_model(data_1, data_2, labels, test_1, test_2, test_label, embedding_we
     model = get_model(n_symbols, embedding_weights)
     early_stopping = EarlyStopping(monitor='val_loss', patience=8)
     bst_model_path = STAMP + '_myword256_20' + '.h5'
-    model_checkpoint = ModelCheckpoint(bst_model_path, monitor='val_f1_score', save_best_only=True, save_weights_only=True)
+    model_checkpoint = ModelCheckpoint(bst_model_path, monitor='val_f1', save_best_only=True, save_weights_only=True)
     hist = model.fit([data_1, data_2], labels, validation_data=([test_1, test_2], test_label), epochs=101,
                      batch_size=10, shuffle=True, callbacks=[early_stopping, model_checkpoint])
     # resultmy = model.predict([data_1, data_2])
@@ -109,9 +109,9 @@ def train_model(data_1, data_2, labels, test_1, test_2, test_label, embedding_we
     bst_loss = min(hist.history['loss'])
     bst_val_loss = min(hist.history['val_loss'])
     print("bst_loss:" + str(bst_loss) + "bst_val_loss" + str(bst_val_loss))
-    bst_val_f1_score = max(hist.history['val_f1_score'])
-    bst_f1_score = max(hist.history['f1_score'])
-    print("bst_f1:"+str(bst_f1_score)+"bst_val_f1"+str(bst_val_f1_score))
+    bst_val_f1 = max(hist.history['val_f1'])
+    bst_f1 = max(hist.history['f1'])
+    print("bst_f1:"+str(bst_f1)+"bst_val_f1"+str(bst_val_f1))
 
 
 if __name__ == '__main__':
