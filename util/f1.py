@@ -23,10 +23,10 @@ class Metrics(Callback):
         return
 
 
-f1 = Metrics()
+metrics = Metrics()
 
 
-def F1(y_true, y_pred):
+def f1(y_true, y_pred):
     def recall(y_true, y_pred):
         """Recall metric.
 
