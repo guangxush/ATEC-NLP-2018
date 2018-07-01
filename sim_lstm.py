@@ -24,7 +24,7 @@ DATA_DIR = './dataset/'
 EMBEDDING_FILE = './models/w2v/w2v.mod'
 TRAIN_DATA_FILE = DATA_DIR + 'mytrain_pair.csv'
 TEST_DATA_FILE = DATA_DIR + 'mytest_pair.csv'
-MAX_SEQUENCE_LENGTH = 15
+MAX_SEQUENCE_LENGTH = 20
 MAX_NB_WORDS = 200000
 EMBEDDING_DIM = 256
 VALIDATION_SPLIT = 0.1
@@ -42,14 +42,14 @@ rate_drop_dense = 0.15
 act = 'relu'
 re_weight = True  # whether to re-weight classes to fit the 17.5% share in test set
 
-STAMP = './models/lstm/lstm_f1_%d_%d_%.2f_%.2f' % (num_lstm, num_dense, rate_drop_lstm, \
+STAMP = './models/lstm_f1_%d_%d_%.2f_%.2f' % (num_lstm, num_dense, rate_drop_lstm, \
                                                 rate_drop_dense)
 
 save = True
 load_tokenizer = False
-save_path = "./models/lstm"
+save_path = "./models/"
 tokenizer_name = "tokenizer.pkl"
-embedding_matrix_path = "./models/lstm/embedding_matrix.npy"
+embedding_matrix_path = "./models/embedding_matrix.npy"
 
 
 ########################################
@@ -96,8 +96,8 @@ def train_model(data_1, data_2, labels, test_1, test_2, test_label, embedding_we
     print(STAMP)
     print('embeding ' + str(embedding_weights))
     model = get_model(n_symbols, embedding_weights)
-    early_stopping = EarlyStopping(monitor='val_loss', patience=30)
-    bst_model_path = STAMP + '_l30w' + '.h5'
+    early_stopping = EarlyStopping(monitor='val_loss', patience=8)
+    bst_model_path = STAMP + '_myword256_20' + '.h5'
     model_checkpoint = ModelCheckpoint(bst_model_path, monitor='val_f1', save_best_only=True, save_weights_only=True)
     hist = model.fit([data_1, data_2], labels, validation_data=([test_1, test_2], test_label), epochs=101,
                      batch_size=10, shuffle=True, callbacks=[early_stopping, model_checkpoint])
@@ -114,17 +114,17 @@ def train_model(data_1, data_2, labels, test_1, test_2, test_label, embedding_we
 
 
 if __name__ == '__main__':
-    model = Word2Vec.load('./models/w2v.mod')
+    model = Word2Vec.load('./models/w2v_256.mod')
     index_dict, word_vectors = create_dictionaries(model)
     new_dic = index_dict
     print ("Setting up Arrays for Keras Embedding Layer...")
     n_symbols = len(index_dict) + 1  # 索引数字的个数，因为有的词语索引为0，所以+1
-    embedding_weights = np.zeros((n_symbols, 100))  # 创建一个n_symbols * 100的0矩阵
+    embedding_weights = np.zeros((n_symbols, 256))  # 创建一个n_symbols * 100的0矩阵
     for w, index in index_dict.items():  # 从索引为1的词语开始，用词向量填充矩阵
         embedding_weights[index, :] = word_vectors[w]  # 词向量矩阵，第一行是0向量（没有索引为0的词语，未被填充）
     print('length = ' + str(len(embedding_weights)))
-    train_dataset1, train_dataset2, labels = load_all_sentence('./data/inputadd_balance.txt', '2')
-    test_dataset1, test_dataset2, test_labels = load_all_sentence('./data/input.txt', '3')
+    train_dataset1, train_dataset2, labels = load_all_sentence('./data/train_data_new.txt', '2')
+    test_dataset1, test_dataset2, test_labels = load_all_sentence('./data/test_data_new.txt', '2')
     print('load data1 ' + str(len(train_dataset1)))
     print('load data2 ' + str(len(train_dataset2)))
     train_dataset1 = sentence_to_index_array(new_dic, train_dataset1, '2', MAX_SEQUENCE_LENGTH)

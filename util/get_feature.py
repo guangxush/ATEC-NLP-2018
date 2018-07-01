@@ -372,16 +372,18 @@ if __name__ == '__main__':
 	#word_vec_fasttext_dict=load_word_vec('./fasttext_fin_model_50.vec') #word embedding from fasttxt
 	#word_vec_word2vec_dict = load_word_vec('./word2vec.txt') #word embedding from word2vec
 	#tfidf_dict=load_tfidf_dict('./atec_nl_sim_tfidf.txt')
-	count = 1
+	number2 = 18851
+	fout2 = open('train_data_new.txt','a')
 	#vocabulary_word2index, vocabulary_index2word, vocabulary_label2index, vocabulary_index2label = create_vocabulary('./atec_nlp_sim_train.csv',60000,name_scope='',tokenize_style='')
-	with open('inputadd.txt', 'r') as fin, open('train_data.csv', 'a') as fout:
+	with open('../data/inputadd.txt', 'r') as fin, open('test_data_new.txt', 'a') as fout:
 		for line in fin:
 			number,sen1,sen2,label = line.strip().split('\t')
-			features_vector = data_mining_features(count,sen1,sen2,vocabulary_word2index,word_vec_fasttext_dict,word_vec_word2vec_dict,tfidf_dict, n_gram=8)
-			count = count + 1
-			if label == 1:
-				fout.write(str(features_vector) + '\t' + str([1,0]) + '\n')
-			else:
-				fout.write(str(features_vector) + '\t' + str([0,1]) + '\n')
-
+			#features_vector = data_mining_features(count,sen1,sen2,vocabulary_word2index,word_vec_fasttext_dict,word_vec_word2vec_dict,tfidf_dict, n_gram=8)
+			#if label == '0':
+			fout2.write(str(number2)+'\t'+sen1+'\t' + sen2 +'\t'+ label +'\n')
+			number2 = number2 + 1
+			#if label == 1:
+			#	fout.write(str(features_vector) + '\t' + str([1,0]) + '\n')
+			#else:
+			#	fout.write(str(features_vector) + '\t' + str([0,1]) + '\n')
             
