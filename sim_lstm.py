@@ -83,7 +83,7 @@ def get_model(nb_words, embedding_matrix):
     model = Model(inputs=[sequence_1_input, sequence_2_input], outputs=preds)
     model.compile(loss='binary_crossentropy',
                   optimizer='adam',
-                  metrics=[f1])
+                  callbacks=[f1])#metrics=[f1]
     model.summary()
     return model
 
