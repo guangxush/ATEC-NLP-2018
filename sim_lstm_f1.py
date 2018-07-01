@@ -125,7 +125,7 @@ def train_model(data_1, data_2, labels, test_1, test_2, test_label, embedding_we
     bst_model_path = STAMP + '_myword256_20' + '.h5'
     model_checkpoint = ModelCheckpoint(bst_model_path, monitor='val_acc', save_best_only=True, save_weights_only=True)
     hist = model.fit([data_1, data_2], labels, validation_data=([test_1, test_2], test_label), epochs=101,
-                     batch_size=10, shuffle=True, callbacks=[early_stopping, model_checkpoint, metrics])
+                     batch_size=10, shuffle=True, callbacks=[metrics])
     # resultmy = model.predict([data_1, data_2])
     # fin = open('./result.txt','a')
     # fin.write(resultmy)
