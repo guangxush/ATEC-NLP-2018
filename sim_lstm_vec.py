@@ -10,7 +10,7 @@ from keras.models import Model
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 import sys
 from util.f1 import f1
-import keras as K
+from keras import backend as K
 
 # from sklearn.metrics import f1_score as f1
 
