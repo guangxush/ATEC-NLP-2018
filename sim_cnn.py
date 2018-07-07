@@ -53,8 +53,8 @@ def cnn_model(nb_words, embedding_matrix):
                                 embedding_dims,
                                 weights=[embedding_matrix],
                                 input_length=max_sequence_length,
-                                trainable=False)
-
+                                trainable=True,
+                                mask_zero=False)
     # we add a Convolution1D, which will learn filters
     # word group filters of size filter_length:
     cov_layer = Conv1D(filters,

@@ -69,7 +69,8 @@ def get_model(nb_words, embedding_matrix):
                                 EMBEDDING_DIM,
                                 weights=[embedding_matrix],
                                 input_length=MAX_SEQUENCE_LENGTH,
-                                trainable=False)
+                                trainable=True,
+                                mask_zero=False)
     bi_lstm_layer = Bidirectional(LSTM(num_lstm, dropout=rate_drop_lstm, recurrent_dropout=rate_drop_lstm))
     droupout = Dropout(0.25)
     conv1d = Conv1D(filters,
