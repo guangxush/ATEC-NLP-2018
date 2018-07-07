@@ -5,7 +5,7 @@
 
 import numpy as np
 from gensim.models import Word2Vec
-from keras.layers import Input, LSTM, Embedding, Lambda
+from keras.layers import Input, LSTM, Embedding, Lambda, Dropout, BatchNormalization, Dense, Bidirectional
 from keras.models import Model
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 import sys
@@ -84,18 +84,31 @@ def get_model(nb_words, embedding_matrix):
                                 input_length=MAX_SEQUENCE_LENGTH,
                                 trainable=True,
                                 mask_zero=False)
-    lstm_layer = LSTM(num_lstm, dropout=rate_drop_lstm, recurrent_dropout=rate_drop_lstm)
+    lstm_layer = Bidirectional(LSTM(num_lstm, dropout=rate_drop_lstm, recurrent_dropout=rate_drop_lstm))
 
     sequence_1_input = Input(shape=(MAX_SEQUENCE_LENGTH,), dtype='int32')
     embedded_sequences_1 = embedding_layer(sequence_1_input)
     x1 = lstm_layer(embedded_sequences_1)
+    x_dropout_1 = Dropout(rate_drop_dense)(x1)
+    x_b_1 = BatchNormalization()(x_dropout_1)
+
+    x_d = Dense(num_dense, activation=act)(x_b_1)
+    x_dropout_2 = Dropout(rate_drop_dense)(x_d)
+    x_b_2 = BatchNormalization()(x_dropout_2)
 
     sequence_2_input = Input(shape=(MAX_SEQUENCE_LENGTH,), dtype='int32')
     embedded_sequences_2 = embedding_layer(sequence_2_input)
     y1 = lstm_layer(embedded_sequences_2)
 
+    y_dropout_1 = Dropout(rate_drop_dense)(y1)
+    y_b_1 = BatchNormalization()(y_dropout_1)
+
+    y_d = Dense(num_dense, activation=act)(y_b_1)
+    y_dropout_2 = Dropout(rate_drop_dense)(y_d)
+    y_b_2 = BatchNormalization()(y_dropout_2)
+
     distance = Lambda(euclidean_distance,
-                      output_shape=eucl_dist_output_shape)([x1, y1])
+                      output_shape=eucl_dist_output_shape)([x_b_2, y_b_2])
     model = Model(inputs=[sequence_1_input, sequence_2_input], outputs=distance)
     model.compile(loss=contrastive_loss,
                   optimizer='adam',
