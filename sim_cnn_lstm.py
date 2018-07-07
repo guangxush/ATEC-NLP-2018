@@ -5,7 +5,7 @@
 
 import numpy as np
 from gensim.models import Word2Vec
-from keras.layers import Dense, Input, LSTM, Embedding, Dropout
+from keras.layers import Dense, Input, LSTM, Embedding, Dropout, Bidirectional, Conv1D, MaxPooling1D
 from keras.layers.merge import concatenate
 from keras.models import Model
 from keras.layers.normalization import BatchNormalization
@@ -40,6 +40,14 @@ num_dense = 100
 rate_drop_lstm = 0.15
 rate_drop_dense = 0.15
 
+
+#cnn
+# Convolution
+kernel_size = 5
+filters = 64
+pool_size = 4
+
+
 act = 'relu'
 re_weight = True  # whether to re-weight classes to fit the 17.5% share in test set
 
@@ -62,15 +70,28 @@ def get_model(nb_words, embedding_matrix):
                                 weights=[embedding_matrix],
                                 input_length=MAX_SEQUENCE_LENGTH,
                                 trainable=False)
-    lstm_layer = LSTM(num_lstm, dropout=rate_drop_lstm, recurrent_dropout=rate_drop_lstm)
+    bi_lstm_layer = Bidirectional(LSTM(num_lstm, dropout=rate_drop_lstm, recurrent_dropout=rate_drop_lstm))
+    droupout = Dropout(0.25)
+    conv1d = Conv1D(filters,
+                     kernel_size,
+                     padding='valid',
+                     activation='relu',
+                     strides=1)
+    maxpolling = MaxPooling1D(pool_size=pool_size)
 
     sequence_1_input = Input(shape=(MAX_SEQUENCE_LENGTH,), dtype='int32')
     embedded_sequences_1 = embedding_layer(sequence_1_input)
-    x1 = lstm_layer(embedded_sequences_1)
+    droupout_1 = droupout(embedded_sequences_1)
+    conv1d_1 = conv1d(droupout_1)
+    maxpolling_1 = maxpolling(conv1d_1)
+    x1 = bi_lstm_layer(maxpolling_1)
 
     sequence_2_input = Input(shape=(MAX_SEQUENCE_LENGTH,), dtype='int32')
     embedded_sequences_2 = embedding_layer(sequence_2_input)
-    y1 = lstm_layer(embedded_sequences_2)
+    droupout_2 = droupout(embedded_sequences_2)
+    conv1d_2 = conv1d(droupout_2)
+    maxpolling_2 = maxpolling(conv1d_2)
+    y1 = bi_lstm_layer(maxpolling_2)
 
     merged = concatenate([x1, y1])
     merged = Dropout(rate_drop_dense)(merged)

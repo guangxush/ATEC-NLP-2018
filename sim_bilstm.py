@@ -5,7 +5,7 @@
 
 import numpy as np
 from gensim.models import Word2Vec
-from keras.layers import Dense, Input, LSTM, Embedding, Dropout
+from keras.layers import Dense, Input, LSTM, Embedding, Dropout, Bidirectional
 from keras.layers.merge import concatenate
 from keras.models import Model
 from keras.layers.normalization import BatchNormalization
@@ -62,15 +62,15 @@ def get_model(nb_words, embedding_matrix):
                                 weights=[embedding_matrix],
                                 input_length=MAX_SEQUENCE_LENGTH,
                                 trainable=False)
-    lstm_layer = LSTM(num_lstm, dropout=rate_drop_lstm, recurrent_dropout=rate_drop_lstm)
+    bi_lstm_layer = Bidirectional(LSTM(num_lstm, dropout=rate_drop_lstm, recurrent_dropout=rate_drop_lstm))
 
     sequence_1_input = Input(shape=(MAX_SEQUENCE_LENGTH,), dtype='int32')
     embedded_sequences_1 = embedding_layer(sequence_1_input)
-    x1 = lstm_layer(embedded_sequences_1)
+    x1 = bi_lstm_layer(embedded_sequences_1)
 
     sequence_2_input = Input(shape=(MAX_SEQUENCE_LENGTH,), dtype='int32')
     embedded_sequences_2 = embedding_layer(sequence_2_input)
-    y1 = lstm_layer(embedded_sequences_2)
+    y1 = bi_lstm_layer(embedded_sequences_2)
 
     merged = concatenate([x1, y1])
     merged = Dropout(rate_drop_dense)(merged)

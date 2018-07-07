@@ -5,14 +5,14 @@
 
 import numpy as np
 from gensim.models import Word2Vec
-from keras.layers import Dense, Input, LSTM, Embedding, Dropout
-from keras.layers.merge import concatenate
+from keras.layers import Input, LSTM, Embedding, Lambda
 from keras.models import Model
-from keras.layers.normalization import BatchNormalization
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 import sys
 from util.f1 import f1
-#from sklearn.metrics import f1_score as f1
+import keras as K
+
+# from sklearn.metrics import f1_score as f1
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -44,13 +44,34 @@ act = 'relu'
 re_weight = True  # whether to re-weight classes to fit the 17.5% share in test set
 
 STAMP = './models/lstm_f1_%d_%d_%.2f_%.2f' % (num_lstm, num_dense, rate_drop_lstm, \
-                                                rate_drop_dense)
+                                              rate_drop_dense)
 
 save = True
 load_tokenizer = False
 save_path = "./models/"
 tokenizer_name = "tokenizer.pkl"
 embedding_matrix_path = "./models/embedding_matrix.npy"
+
+
+# use this layer to calculate the euclidean_distance
+def euclidean_distance(vects):
+    x, y = vects
+    return K.sqrt(K.maximum(K.sum(K.square(x - y), axis=1, keepdims=True), K.epsilon()))
+
+
+def eucl_dist_output_shape(shapes):
+    shape1, shape2 = shapes
+    return (shape1[0], 1)
+
+
+# use this function as loss function
+def contrastive_loss(y_true, y_pred):
+    '''Contrastive loss from Hadsell-et-al.'06
+    http://yann.lecun.com/exdb/publis/pdf/hadsell-chopra-lecun-06.pdf
+    '''
+    margin = 1
+    return K.mean(y_true * K.square(y_pred) +
+                  (1 - y_true) * K.square(K.maximum(margin - y_pred, 0)))
 
 
 ########################################
@@ -72,16 +93,10 @@ def get_model(nb_words, embedding_matrix):
     embedded_sequences_2 = embedding_layer(sequence_2_input)
     y1 = lstm_layer(embedded_sequences_2)
 
-    merged = concatenate([x1, y1])
-    merged = Dropout(rate_drop_dense)(merged)
-    merged = BatchNormalization()(merged)
-
-    merged = Dense(num_dense, activation=act)(merged)
-    merged = Dropout(rate_drop_dense)(merged)
-    merged = BatchNormalization()(merged)
-    preds = Dense(1, activation='sigmoid')(merged)
-    model = Model(inputs=[sequence_1_input, sequence_2_input], outputs=preds)
-    model.compile(loss='binary_crossentropy',
+    distance = Lambda(euclidean_distance,
+                      output_shape=eucl_dist_output_shape)([x1, y1])
+    model = Model(inputs=[sequence_1_input, sequence_2_input], outputs=distance)
+    model.compile(loss=contrastive_loss,
                   optimizer='adam',
                   metrics=[f1])
     model.summary()
@@ -111,7 +126,7 @@ def train_model(data_1, data_2, labels, test_1, test_2, test_label, embedding_we
     print("bst_loss:" + str(bst_loss) + "bst_val_loss" + str(bst_val_loss))
     bst_val_f1 = max(hist.history['val_f1'])
     bst_f1 = max(hist.history['f1'])
-    print("bst_f1:"+str(bst_f1)+"bst_val_f1"+str(bst_val_f1))
+    print("bst_f1:" + str(bst_f1) + "bst_val_f1" + str(bst_val_f1))
 
 
 if __name__ == '__main__':
