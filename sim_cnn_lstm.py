@@ -51,7 +51,7 @@ pool_size = 4
 act = 'relu'
 re_weight = True  # whether to re-weight classes to fit the 17.5% share in test set
 
-STAMP = './models/lstm_f1_%d_%d_%.2f_%.2f' % (num_lstm, num_dense, rate_drop_lstm, \
+STAMP = './models/cnn_lstm_f1_%d_%d_%.2f_%.2f' % (num_lstm, num_dense, rate_drop_lstm, \
                                                 rate_drop_dense)
 
 save = True
