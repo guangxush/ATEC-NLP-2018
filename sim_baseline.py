@@ -57,6 +57,89 @@ embedding_matrix_path = "./models/embedding_matrix.npy"
 # define the model structure
 ########################################
 def get_model(nb_words, embedding_matrix):
+    input1 = Input(shape=(maxlen,))
+
+    input2 = Input(shape=(maxlen,))
+
+    input3 = Input(shape=(5,))
+
+    embed1 = Embedding(wordnum, embedsize)
+
+    lstm0 = CuDNNLSTM(lstmsize, return_sequences=True)
+
+    lstm1 = Bidirectional(CuDNNLSTM(lstmsize))
+
+    lstm2 = CuDNNLSTM(lstmsize)
+
+    att1 = Attention(10)
+    den = Dense(64, activation='tanh')
+
+    # att1 = Lambda(lambda x: K.max(x,axis = 1))
+
+    v3 = embed1(input3)
+
+    v1 = embed1(input1)
+
+    v2 = embed1(input2)
+
+    v11 = lstm1(v1)
+
+    v22 = lstm1(v2)
+
+    v1ls = lstm2(lstm0(v1))
+
+    v2ls = lstm2(lstm0(v2))
+    v1 = Concatenate(axis=1)([att1(v1), v11])
+
+    v2 = Concatenate(axis=1)([att1(v2), v22])
+
+    input1c = Input(shape=(maxlen2,))
+
+    input2c = Input(shape=(maxlen2,))
+
+    embed1c = Embedding(charnum, embedsize)
+
+    lstm1c = Bidirectional(CuDNNLSTM(6))
+
+    att1c = Attention(10)
+
+    v1c = embed1(input1c)
+
+    v2c = embed1(input2c)
+    v11c = lstm1c(v1c)
+
+    v22c = lstm1c(v2c)
+
+    v1c = Concatenate(axis=1)([att1c(v1c), v11c])
+
+    v2c = Concatenate(axis=1)([att1c(v2c), v22c])
+
+    mul = Multiply()([v1, v2])
+
+    sub = Lambda(lambda x: K.abs(x))(Subtract()([v1, v2]))
+
+    maximum = Maximum()([Multiply()([v1, v1]), Multiply()([v2, v2])])
+
+    mulc = Multiply()([v1c, v2c])
+    subc = Lambda(lambda x: K.abs(x))(Subtract()([v1c, v2c]))
+
+    maximumc = Maximum()([Multiply()([v1c, v1c]), Multiply()([v2c, v2c])])
+
+    sub2 = Lambda(lambda x: K.abs(x))(Subtract()([v1ls, v2ls]))
+
+    matchlist = Concatenate(axis=1)([mul, sub, mulc, subc, maximum, maximumc, sub2])
+
+    matchlist = Dropout(0.05)(matchlist)
+
+    matchlist = Concatenate(axis=1)(
+        [Dense(32, activation='relu')(matchlist), Dense(48, activation='sigmoid')(matchlist)])
+
+    res = Dense(1, activation='sigmoid')(matchlist)
+
+    # model = Model(inputs=[input1, input2, input3, input1c, input2c], outputs=res)
+
+    # model.compile(optimizer=Adam(lr=0.001), loss="binary_crossentropy")
+
     embedding_layer = Embedding(nb_words,
                                 EMBEDDING_DIM,
                                 weights=[embedding_matrix],

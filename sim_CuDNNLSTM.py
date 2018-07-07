@@ -62,17 +62,25 @@ def get_model(nb_words, embedding_matrix):
                                 weights=[embedding_matrix],
                                 input_length=MAX_SEQUENCE_LENGTH,
                                 trainable=True)
-    bi_lstm_layer = CuDNNLSTM(num_lstm, dropout=rate_drop_lstm, recurrent_dropout=rate_drop_lstm)
+    lstm0 = CuDNNLSTM(num_lstm, return_sequences=True)
+
+    lstm1 = Bidirectional(CuDNNLSTM(num_lstm))
+
+    lstm2 = CuDNNLSTM(num_lstm)
 
     sequence_1_input = Input(shape=(MAX_SEQUENCE_LENGTH,), dtype='int32')
     embedded_sequences_1 = embedding_layer(sequence_1_input)
-    x1 = bi_lstm_layer(embedded_sequences_1)
+    x1 = lstm0(embedded_sequences_1)
+    x_lstm1 = lstm1(x1)
+    x_lstm2 = lstm2(x_lstm1)
 
     sequence_2_input = Input(shape=(MAX_SEQUENCE_LENGTH,), dtype='int32')
     embedded_sequences_2 = embedding_layer(sequence_2_input)
-    y1 = bi_lstm_layer(embedded_sequences_2)
+    y1 = lstm0(embedded_sequences_2)
+    y_lstm1 = lstm1(y1)
+    y_lstm2 = lstm2(y_lstm1)
 
-    merged = concatenate([x1, y1])
+    merged = concatenate([x_lstm2, y_lstm2])
     merged = Dropout(rate_drop_dense)(merged)
     merged = BatchNormalization()(merged)
 
