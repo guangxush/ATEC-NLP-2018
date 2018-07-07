@@ -62,7 +62,7 @@ def get_model(nb_words, embedding_matrix):
                                 weights=[embedding_matrix],
                                 input_length=MAX_SEQUENCE_LENGTH,
                                 trainable=True)
-    lstm0 = CuDNNLSTM(num_lstm, return_sequences=True)
+    lstm0 = CuDNNLSTM(num_lstm)
 
     lstm1 = Bidirectional(CuDNNLSTM(num_lstm))
 
