@@ -127,9 +127,9 @@ def train_model(data_1, data_2, labels, test_1, test_2, test_label, embedding_we
     print('embeding ' + str(embedding_weights))
     model = get_model(n_symbols, embedding_weights)
     early_stopping = EarlyStopping(monitor='val_loss', patience=8)
-    bst_model_path = STAMP + '_myword256_20' + '.h5'
+    bst_model_path = STAMP + '_vec' + '.h5'
     model_checkpoint = ModelCheckpoint(bst_model_path, monitor='val_f1', save_best_only=True, save_weights_only=True)
-    hist = model.fit([data_1, data_2], labels, validation_data=([test_1, test_2], test_label), epochs=101,
+    hist = model.fit([data_1, data_2], labels, validation_data=([test_1, test_2], test_label), epochs=10,
                      batch_size=10, shuffle=True, callbacks=[early_stopping, model_checkpoint])
     # resultmy = model.predict([data_1, data_2])
     # fin = open('./result.txt','a')
