@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
-
-from gensim.models.word2vec import LineSentence, Word2Vec
+import logging
+from gensim.models.word2vec import Word2Vec
 import sys
 import os
 
@@ -11,12 +11,13 @@ sys.setdefaultencoding("utf-8")
 def train_word2vec():
     input_file = '../data/atec_nlp_sim_train.csv'
     data_prepare(input_file)
+    logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     # raw_sentences = ["the quick brown fox jumps over the lazy dogs","yoyoyo you go home now to sleep"]
-    sentences = LineSentence("../data/train_questions_with_evidence.txt")
-    model = Word2Vec(sentences, min_count=1, iter=1000, size=256)
-    model.train(sentences, total_examples=model.corpus_count, epochs=1000)
-
+    sentences = Word2Vec.Text8Corpus("../data/train_questions_with_evidence.txt")
+    model = Word2Vec(sentences, min_count=1, size=256, window=5, workers=4)
     model.save("../models/w2v_256.mod")
+    model.wv.save_word2vec_format("../models/w2v_256.mod", binary=False)
+
     model_loaded = Word2Vec.load("../models/w2v_256.mod")
     sim = model_loaded.wv.most_similar(positive=[u'花呗'])
     for s in sim:
