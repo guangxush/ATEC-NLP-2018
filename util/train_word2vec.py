@@ -26,7 +26,7 @@ def train_word2vec():
     emb = np.zeros(shape=(len(d) + 2, 256), dtype='float32')
     model.save(save_model_file)
     model.wv.save_word2vec_format(save_model_file, binary=False)
-    for i in range(2, len(d)+2):
+    for i in range(0, len(d)):
         emb[i, :] = weights[i, :]
     np.save(open('../models/sst_256_dim_all.embeddings', 'wb'), emb)
     return model
