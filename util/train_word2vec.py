@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 import logging
-from gensim.models.word2vec import Word2Vec
+from gensim.models import word2vec
 import sys
 import os
 
@@ -13,12 +13,12 @@ def train_word2vec():
     data_prepare(input_file)
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     # raw_sentences = ["the quick brown fox jumps over the lazy dogs","yoyoyo you go home now to sleep"]
-    sentences = Word2Vec.Text8Corpus("../data/train_questions_with_evidence.txt")
-    model = Word2Vec(sentences, min_count=1, size=256, window=5, workers=4)
+    sentences = word2vec.Text8Corpus("../data/train_questions_with_evidence.txt")
+    model = word2vec.Word2Vec(sentences, min_count=1, size=256, window=5, workers=4)
     model.save("../models/w2v_256.mod")
     model.wv.save_word2vec_format("../models/w2v_256.mod", binary=False)
 
-    model_loaded = Word2Vec.load("../models/w2v_256.mod")
+    model_loaded = model.load("../models/w2v_256.mod")
     sim = model_loaded.wv.most_similar(positive=[u'花呗'])
     for s in sim:
         print s[0]
