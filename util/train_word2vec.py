@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 import logging
 from gensim.models import word2vec
+from gensim.models import Word2Vec
 import sys
 import os
 
@@ -18,7 +19,7 @@ def train_word2vec():
     model.save("../models/w2v_256.mod")
     model.wv.save_word2vec_format("../models/w2v_256.mod", binary=False)
 
-    model_loaded = word2vec.Word2Vec.load("../models/w2v_256.mod")
+    model_loaded = Word2Vec.load("../models/w2v_256.mod")
     sim = model_loaded.wv.most_similar(positive=[u'花呗'])
     for s in sim:
         print s[0]
