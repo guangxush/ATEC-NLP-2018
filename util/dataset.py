@@ -3,7 +3,9 @@ import numpy as np
 from gensim.models.word2vec import Word2Vec
 from gensim.corpora.dictionary import Dictionary
 import jieba
-#加载句子特征，标签2维
+
+
+# 加载句子特征，标签2维
 def load_data_with_sentences(filename):
     input_file = open(filename, 'r')
     input_x = []
@@ -30,7 +32,7 @@ def load_data_with_sentences(filename):
     return input_X, input_Y
 
 
-#加载句子特征,标签1维
+# 加载句子特征,标签1维
 def load_data_with_sentences_single_flag(filename):
     input_file = open(filename, 'r')
     input_x = []
@@ -57,7 +59,7 @@ def load_data_with_sentences_single_flag(filename):
     return input_X, input_Y
 
 
-#加载特征工程之后的句子向量
+# 加载特征工程之后的句子向量
 def load_data_with_features(filename):
     # 读取输入数据
     input_file = open(filename, 'r')
@@ -77,72 +79,76 @@ def load_data_with_features(filename):
     print input_Y.dtype
     return input_X, input_Y
 
+
 def create_dictionaries(p_model):
     gensim_dict = Dictionary()
-    #p_model.build_vocab('./lstm_vocab')
+    # p_model.build_vocab('./lstm_vocab')
     gensim_dict.doc2bow(p_model.wv.vocab.keys(), allow_update=True)
     w2indx = {v: k + 1 for k, v in gensim_dict.items()}  # 词语的索引，从1开始编号
     w2vec = {word: p_model[word] for word in w2indx.keys()}  # 词语的词向量
     return w2indx, w2vec
 
+
 def create_dictionariesfromword():
     w2indx = {}
     w2vec = {}
-    fr = open('./models/word2vec_c','r')
+    fr = open('./models/word2vec_c', 'r')
     number = -1
     w2indx[''] = 0
-    w2vec[''] =np.zeros(256)
+    w2vec[''] = np.zeros(256)
     for line in fr:
         linelist = line.strip().split(' ')
         if len(linelist) > 2 and len(linelist) == 257:
             cur = []
             w2indx[str(linelist[0])] = number  # 词语的索引，从1开始编号
-            for i in xrange(1,len(linelist)):
+            for i in xrange(1, len(linelist)):
                 cur.append(float(linelist[i]))
             w2vec[str(linelist[0])] = cur
         number = number + 1
     return w2indx, w2vec
 
-def load_all_sentence(filename,dim):
-    fin = open(filename,'r')
+
+def load_all_sentence(filename, dim):
+    fin = open(filename, 'r')
     if dim == '1':
-        result_sentences=[]
+        result_sentences = []
         result_labels = []
         for line in fin:
-            number,sen1,sen2,label = line.strip().split('\t')
+            number, sen1, sen2, label = line.strip().split('\t')
             cur_sen = []
             sen1_list = list(jieba.cut(sen1))
             sen2_list = list(jieba.cut(sen2))
-            cur_sen = sen1_list+sen2_list
+            cur_sen = sen1_list + sen2_list
             result_sentences.append(cur_sen);
             result_labels.append(float(label))
-        return result_sentences,result_labels
+        return result_sentences, result_labels
     elif dim == '2':
-        result_sentences1=[]
-        result_sentences2=[]
+        result_sentences1 = []
+        result_sentences2 = []
         result_labels = []
         for line in fin:
-            number,sen1,sen2,label = line.strip().split('\t')
+            number, sen1, sen2, label = line.strip().split('\t')
             sen1_list = list(jieba.cut(sen1))
             sen2_list = list(jieba.cut(sen2))
             result_sentences1.append(sen1_list);
             result_sentences2.append(sen2_list);
             result_labels.append(float(label))
-        return result_sentences1,result_sentences2,result_labels
+        return result_sentences1, result_sentences2, result_labels
     elif dim == '3':
-        result_sentences1=[]
-        result_sentences2=[]
+        result_sentences1 = []
+        result_sentences2 = []
         result_labels = []
         for line in fin:
-            sen1,sen2,label = line.strip().split('\t')
+            sen1, sen2, label = line.strip().split('\t')
             sen1_list = list(jieba.cut(sen1))
             sen2_list = list(jieba.cut(sen2))
             result_sentences1.append(sen1_list);
             result_sentences2.append(sen2_list);
             result_labels.append(float(label))
-        return result_sentences1,result_sentences2,result_labels
+        return result_sentences1, result_sentences2, result_labels
 
-def sentence_to_index_array(p_new_dic, p_sen,dim,number):  # 文本转为索引数字模式
+
+def sentence_to_index_array(p_new_dic, p_sen, dim, number):  # 文本转为索引数字模式
     new_sentences = []
     line = 0
     if dim == '1':
@@ -154,7 +160,7 @@ def sentence_to_index_array(p_new_dic, p_sen,dim,number):  # 文本转为索引�
                 except:
                     new_sen.append(0)  # 索引字典里没有的词转为数字0
             new_sentences.append(new_sen)
-    #print(new_sentences)
+        # print(new_sentences)
         return np.array(new_sentences)
     elif dim == '2':
         for sen in p_sen:
@@ -169,16 +175,17 @@ def sentence_to_index_array(p_new_dic, p_sen,dim,number):  # 文本转为索引�
                         new_sentences.append(0)  # 索引字典里没有的词转为数字0
                 else:
                     break
-            if c < int(number): 
+            if c < int(number):
                 addi = 0
-                while(addi < (int(number) - c)):
+                while (addi < (int(number) - c)):
                     new_sentences.append(0)
-                    addi = addi  + 1
-            #print('new_sen ' + str(new_sentences))
-            #if line > 10:
-             #   break
-        print('new_sentences'+ str(len(new_sentences)))
-        return np.array(new_sentences).reshape(line,int(number))
+                    addi = addi + 1
+            # print('new_sen ' + str(new_sentences))
+            # if line > 10:
+            #   break
+        print('new_sentences' + str(len(new_sentences)))
+        return np.array(new_sentences).reshape(line, int(number))
+
 
 def sentence_to_index_array_for_test(p_new_dic, p_sen):  # 文本转为索引数字模式
     new_sentences = []
@@ -190,19 +197,22 @@ def sentence_to_index_array_for_test(p_new_dic, p_sen):  # 文本转为索引数
             new_sentences.append(0)  # 索引字典里没有的词转为数字
     return np.array(new_sentences)
 
+
 def get_balance_data():
-    fin = open('../data/inputadd.txt','r')
-    fw = open('../data/inputadd_balance.txt','w')
+    fin = open('../data/inputadd.txt', 'r')
+    fw = open('../data/inputadd_balance.txt', 'w')
     count0 = 0
     for line in fin:
-        number,sen1,sen2,label = line.strip().split('\t')
+        number, sen1, sen2, label = line.strip().split('\t')
         if label == '1':
             fw.write(line)
         if label == '0':
             count0 = count0 + 1
             if (count0 < 10000):
                 fw.write(line)
+
+
 if __name__ == '__main__':
-    index_dict,word_vectors = create_dictionariesfromword()
+    index_dict, word_vectors = create_dictionariesfromword()
     print(str(len(index_dict)))
     print(str(len(word_vectors)))

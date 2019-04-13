@@ -1,9 +1,12 @@
 # -*- coding:utf-8 -*-
-import logging
 from gensim.models import word2vec
-from gensim.models import Word2Vec
-import sys
+import logging
 import os
+import pickle
+import sys
+import numpy as np
+from gensim.models import Word2Vec
+from gensim.models.word2vec import LineSentence
 
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -13,16 +16,20 @@ def train_word2vec():
     input_file = '../data/atec_nlp_sim_train.csv'
     data_prepare(input_file)
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-    # raw_sentences = ["the quick brown fox jumps over the lazy dogs","yoyoyo you go home now to sleep"]
-    sentences = word2vec.Text8Corpus("../data/train_questions_with_evidence.txt")
+    sentences = word2vec.Text8Corpus(input_file)
+    save_model_file = '../models/w2v_256.mod'
     model = word2vec.Word2Vec(sentences, min_count=1, size=256, window=5, workers=4)
-    model.save("../models/w2v_256.mod")
-    model.wv.save_word2vec_format("../models/w2v_256.mod", binary=False)
 
-    model_loaded = Word2Vec.load("../models/w2v_256.mod")
-    sim = model_loaded.wv.most_similar(positive=[u'花呗'])
-    for s in sim:
-        print s[0]
+    # vocab = pickle.load(open('../models/vocabulary_all.pkl', 'rb'))
+    weights = model.wv.syn0
+    d = dict([(k, v.index) for k, v in model.wv.vocab.items()])
+    emb = np.zeros(shape=(len(d) + 2, 256), dtype='float32')
+    model.save(save_model_file)
+    model.wv.save_word2vec_format(save_model_file, binary=False)
+    for i in range(2, len(d)+2):
+        emb[i, :] = weights[i, :]
+    np.save(open('../models/sst_256_dim_all.embeddings', 'wb'), emb)
+    return model
 
 
 def data_prepare(input_file):
