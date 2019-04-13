@@ -29,6 +29,8 @@ def train_word2vec():
 
 
 def data_prepare(input_file):
+    jieba.add_word('花呗')
+    jieba.add_word('借呗')
     print "data prepare start....."
     if os.path.exists('../data/train_questions_with_evidence.txt'):
         return
