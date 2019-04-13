@@ -4,6 +4,7 @@ import os
 import sys
 from gensim.models import Word2Vec
 from gensim.models.word2vec import LineSentence
+import jieba
 
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -35,8 +36,10 @@ def data_prepare(input_file):
     fw = open('../data/train_questions_with_evidence.txt', 'w')
     for line in fr:
         line = line.strip('\n').split('\t')
-        fw.write(str(line[1]) + '\n')
-        fw.write(str(line[2]) + '\n')
+        seg_list1 = jieba.cut(line[1])
+        fw.write("\t".join(seg_list1) + '\n')
+        seg_list2 = jieba.cut(line[2])
+        fw.write("\t".join(seg_list2) + '\n')
     fr.close()
     fw.close()
     print('data prepared!!!!!')
